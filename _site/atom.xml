@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.6">Jekyll</generator><link href="https://littlesakana.github.io/OverStackFlow/atom.xml" rel="self" type="application/atom+xml" /><link href="https://littlesakana.github.io/OverStackFlow/" rel="alternate" type="text/html" /><updated>2016-12-29T10:36:05+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/</id><title>LittleSakana Development</title><subtitle>开发学习过程笔记及开发经验积累，以供参考</subtitle><entry><title>Jspatch从入门到放弃</title><link href="https://littlesakana.github.io/OverStackFlow/JSPatch%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/" rel="alternate" type="text/html" title="Jspatch从入门到放弃" /><published>2016-02-06T00:00:00+08:00</published><updated>2016-02-06T00:00:00+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/JSPatch从入门到放弃</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/JSPatch%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/">&lt;p&gt;#JSPatch 从入门到放弃&lt;/p&gt;
+
+&lt;p&gt;##JSPatch 是什么&lt;/p&gt;
+
+&lt;p&gt;JSPatch 是一个开源项目(&lt;a href=&quot;https://github.com/bang590/JSPatch&quot;&gt;Github链接&lt;/a&gt;)，只需要在项目里引入极小的引擎文件，就可以使用 JavaScript 调用任何 Objective-C 的原生接口，替换任意 Objective-C 原生方法。目前主要用于下发 JS 脚本替换原生 Objective-C 代码，实时修复线上 bug。&lt;/p&gt;
+
+&lt;p&gt;##JSPatch平台又是什么鬼
+&amp;gt;JSPatch需要你自己搞一个服务器管理、下发脚本，还要处理安全问题，高并发问题，烦死你。JSPatch平台封装了SDK，你只需要继承SDK就可以省去一堆的麻烦。&lt;/p&gt;
+
+&lt;p&gt;JSPatch 需要使用者有一个后台可以下发和管理脚本，并且需要处理传输安全等部署工作，JSPatch 平台帮你做了这些事，提供了脚本后台托管，版本管理，保证传输安全等功能，让你无需搭建一个后台，无需关心部署操作，只需引入一个 SDK 即可立即使用 JSPatch。&lt;/p&gt;
+
+&lt;p&gt;JSPatch 平台的 SDK 在核心代码的基础上增加了向平台请求脚本/传输解密/版本管理等功能，只用于这个平台。&lt;/p&gt;
+
+&lt;p&gt;通过 JSPatch 平台上传的脚本文件都会保存在七牛云存储上，客户端 APP 只跟七牛服务器通讯，支持高并发，CDN分布全国，速度和稳定性有保证。&lt;/p&gt;
+
+&lt;p&gt;##SDK接入&lt;/p&gt;
+
+&lt;p&gt;这种问题不要问我，注册一个账号，建一个app获取到appid，然后接入SDK完事儿。至于你是用cocoapods还是手动接入，全凭个人喜好。&lt;a href=&quot;http://jspatch.com/Docs/SDK&quot;&gt;SDK接入&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;##API主要方法
+####+startWithAppKey:
+传入在平台申请的 appKey，启动 JSPatch SDK。在&lt;code class=&quot;highlighter-rouge&quot;&gt;-application:didFinishLaunchingWithOptions:&lt;/code&gt;开头初始化第三方库的时候一并调用初始化。
+####+sync
+与 JSPatch 平台后台同步，询问是否有 patch 更新，如果有更新会自动下载并执行。
+&amp;gt;每调用一次 +sync 就会请求一次后台，如果app启动的时候检查一次就OK的话就在&lt;code class=&quot;highlighter-rouge&quot;&gt;-application:didFinishLaunchingWithOptions:&lt;/code&gt;调用一次。
+&amp;gt;
+&amp;gt;如果实时性要求高，就在&lt;code class=&quot;highlighter-rouge&quot;&gt;-applicationDidBecomeActive:&lt;/code&gt;的时候调用。&lt;/p&gt;
+
+&lt;p&gt;####+setupLogger:&lt;/p&gt;
+
+&lt;p&gt;SDK打一些请求和执行的log，默认是&lt;code class=&quot;highlighter-rouge&quot;&gt;NSLog()&lt;/code&gt;输出，如果app有自己的日志系统，并且希望自己的日志系统拿到这些log，则在+startWithAppKey之前调用这个方法。&lt;/p&gt;
+
+&lt;p&gt;####+testScriptInBundle&lt;/p&gt;
+
+&lt;p&gt;写好的脚本上线前总要测试一下吧，就是用这个方法。需要把main.js文件拖到项目中，并且不要调用+startWithAppKey:方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意！！！：测试完成一定要删除main.js,血淋淋的教训是，如果不删除，线上的脚本down下来之后，无法确定会执行哪个main.js,莫名其妙的问题，并且很难找到。切记切记&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;####+setupCallback:
+JSPatch 执行过程中的事件回调，在以下事件发生时会调用传入的 block：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef NS_ENUM(NSInteger, JPCallbackType){
+    JPCallbackTypeUnknow        = 0,
+    JPCallbackTypeRunScript     = 1,    //执行脚本
+    JPCallbackTypeUpdate        = 2,    //脚本有更新
+    JPCallbackTypeUpdateDone    = 3,    //已拉取新脚本
+    JPCallbackTypeCondition     = 4,    //条件下发
+    JPCallbackTypeGray          = 5,    //灰度下发
+};
+
+例如
+[JSPatch setupCallback:^(JPCallbackType type, NSDictionary *data, NSError *error) {
+    switch (type) {
+        case JPCallbackTypeUpdate: {
+            NSLog(@&quot;updated %@ %@&quot;, data, error);
+            break;
+        }
+        case JPCallbackTypeRunScript: {
+            NSLog(@&quot;run script %@ %@&quot;, data, error);
+            break;
+        }
+        default:
+            break;
+    }
+}];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;####+setupUserData：
+定义用户属性，在&lt;code class=&quot;highlighter-rouge&quot;&gt;+sync:&lt;/code&gt;之前调用，用于条件下发，可以用来做AB测试。什么是AB测试？自己去Google啊…&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[JSPatch setupUserData:@{
+    @&quot;userId&quot;: user.userId, 
+    @&quot;location&quot;: user.location,
+    @&quot;gender&quot;:user.gender,
+    @&quot;age&quot;:user.age
+}];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://s29.postimg.org/annnszag7/7_D77_D381_B652_457_C_A742_2232_F8_F3_DF1_D.jpg&quot; alt=&quot;条件下发&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;发布补丁的时候选择条件下发，写入相应的条件就可以实现条件下发。例如图中性别是女，年龄小于35岁的用户显示特定的内容。还可以选择手机系统的版本。&lt;/p&gt;
+
+&lt;p&gt;####+setupDevelopment
+开发者预览模式，可以在 debug 模式下测试补丁效果。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[JSPatch startAppWithKey:@&quot;&quot;];
+#ifdef DEBUG
+[JSPatch setupDevelopment];
+#endif
+[JSPatch sync];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;##灰度下发&lt;/p&gt;
+
+&lt;p&gt;这个功能太实用了，选择灰度下发可以按照&lt;strong&gt;比例灰度&lt;/strong&gt;和&lt;strong&gt;人数灰度&lt;/strong&gt;下发。比例灰度例如随机挑选 30% 的设备生效；人数灰度比如只安装1000台设备。应用场景：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;先下发一批看看效果，如果OK就全量下发&lt;/li&gt;
+  &lt;li&gt;只对部分用户下发，显示特定的效果（和条件下发类似）&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;##实战&lt;/p&gt;
+
+&lt;p&gt;扯了这么多终于到实战了。&lt;/p&gt;
+
+&lt;p&gt;###背景：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;项目已经集成了SDK&lt;/li&gt;
+  &lt;li&gt;注册过了平台账号&lt;/li&gt;
+  &lt;li&gt;已经注册了APP获得了appkey&lt;/li&gt;
+  &lt;li&gt;已经上线了集成过JSPatch SDK的app&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;这个上线的版本出现了大量的crash，crash率很高，不马上解决，老板就会马上解决你…&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;线上的代码是这样的,数组访问越界了&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DSHomeViewController&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UITableView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;didSelectRowAtIndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSIndexPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//可能会超出数组范围导致crash
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;DSGoodsViewController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DSGoodsViewController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithContent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;navigationController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pushViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;###修改源代码&lt;/p&gt;
+
+&lt;p&gt;修改后的代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DSHomeViewController&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UITableView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;didSelectRowAtIndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSIndexPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;DSGoodsViewController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DSGoodsViewController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithContent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;navigationController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pushViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;###编写补丁脚本&lt;/p&gt;
+
+&lt;p&gt;打开&lt;a href=&quot;http://jspatch.com/Tools/convertor&quot;&gt;JSPatch代码转换器&lt;/a&gt;，原生代码转化为JS代码
+&lt;img src=&quot;https://s23.postimg.org/6yuw0er9n/Wechat_IMG1.jpg&quot; alt=&quot;转化器&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;转化成功了，但是要数组，需要修改一下。&lt;a href=&quot;https://github.com/bang590/JSPatch/wiki/JSPatch-常见问题#字符串--数组--字典-操作问题&quot;&gt;常见问题&lt;/a&gt; 修改之后的脚本,为了能够知道脚本运行，第一行加上log&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;console.log(&#39;JSPatch Run Success&#39;);
+require(&quot;DSGoodsViewController&quot;);
+
+defineClass(&quot;DSHomeViewController&quot;, {
+    tableView_didSelectRowAtIndexPath: function(tableView, indexPath) {
+        var row = indexPath.row();
+        if (self.dataSource().length() &amp;gt; row) {
+            var content = self.dataSource()[row];
+            var controller = DSGoodsViewController.alloc().initWithContent(content);
+            self.navigationController().pushViewController(controller);
+        }
+    }
+}, {});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;###测试脚本
+写好之后的脚本存为main.js放到项目中，在&lt;code class=&quot;highlighter-rouge&quot;&gt;-application:didFinishLaunchingWithOptions:&lt;/code&gt;方法中打开测试&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	 //[JSPatch startWithAppKey:myAPPKey];
+    //[JSPatch sync];
+    [JSPatch testScriptInBundle];
+    ….
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;编译运行会看到控制台log输出&lt;code class=&quot;highlighter-rouge&quot;&gt;JSPatch Run Success&lt;/code&gt; 然后……怎么能少了调试呢
+###在Safari中断点调试&lt;/p&gt;
+
+&lt;p&gt;#####开启 Safari 调试菜单
+Safari -&amp;gt; 偏好设置 -&amp;gt; 高级 -&amp;gt; 勾选[在菜单栏中显示“开发”菜单]&lt;/p&gt;
+
+&lt;p&gt;#####启动app进行调试
+启动APP -&amp;gt; Safari -&amp;gt; 开发 -&amp;gt; 选择你的机器 -&amp;gt; JSContext&lt;/p&gt;
+
+&lt;p&gt;在 iOS8 下，JSPatch 支持使用 Safari 自带的调试工具对 JS 脚本进行断点调试，界面大致长这样
+&lt;img src=&quot;https://github.com/bang590/JSPatch/wiki/images/debuggerCN.png&quot; alt=&quot;JS调试器&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;###上传脚本&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在平台上新建一个线上的版本&lt;/li&gt;
+  &lt;li&gt;把调试通过的脚本main.js上传到这个线上的版本&lt;/li&gt;
+  &lt;li&gt;选择全量下发（因为要搞定crash）&lt;/li&gt;
+  &lt;li&gt;删除本地的main.js&lt;/li&gt;
+  &lt;li&gt;好了，等着下发之后crash率降下来，饭碗保住了&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;###常见的问题&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;不能用 &lt;code class=&quot;highlighter-rouge&quot;&gt;NSLog(&#39;xx&#39;)&lt;/code&gt;，应该用 &lt;code class=&quot;highlighter-rouge&quot;&gt;console.log(&#39;xx&#39;)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;get property 记得加括号，例如 &lt;code class=&quot;highlighter-rouge&quot;&gt;self.navigationItem()&lt;/code&gt;，而不是 &lt;code class=&quot;highlighter-rouge&quot;&gt;self.navigationItem&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;私有成员变量要用 &lt;code class=&quot;highlighter-rouge&quot;&gt;self.valueForKey()&lt;/code&gt; 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;self.setValue_forKey()&lt;/code&gt; 接口存取&lt;/li&gt;
+  &lt;li&gt;block 里不能直接使用 self,应该在block外定义var myself = self;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;其他更多请参见 wiki 的 &lt;a href=&quot;https://github.com/bang590/JSPatch/wiki/JSPatch-基础用法&quot;&gt;基础用法&lt;/a&gt; 和 &lt;a href=&quot;https://github.com/bang590/JSPatch/wiki/JSPatch-常见问题&quot;&gt;常见问题&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;未完待续。。。&lt;/p&gt;</content><summary>#JSPatch 从入门到放弃</summary></entry><entry><title>Iosdeveloptips</title><link href="https://littlesakana.github.io/OverStackFlow/iOSDevelopTips/" rel="alternate" type="text/html" title="Iosdeveloptips" /><published>2016-02-05T00:00:00+08:00</published><updated>2016-02-05T00:00:00+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/iOSDevelopTips</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/iOSDevelopTips/">&lt;p&gt;#iOS Development Tips&lt;/p&gt;
+
+&lt;p&gt;####数组拼接字符串&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *arr = [NSArray arrayWithObjects:@&quot;I&quot;, @&quot;love&quot;, @&quot;you&quot;, nil];
+NSLog(@&quot;%@&quot;,[arr componentsJoinedByString:@&quot;&quot;]);//打印Iloveyou
+NSLog(@&quot;%@&quot;,[arr componentsJoinedByString:@&quot; &quot;]);//打印I love you
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;- (NSArray&amp;lt;NSString *&amp;gt; *)componentsSeparatedByCharactersInSet:(NSCharacterSet *)separator&lt;/code&gt;方法的而作用是通过set来进行分割字符串，返回分割后的数组。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@&quot;0123456&quot;];
+NSString *nam = @&quot;1g2h45j3d688&quot;;
+NSLog(@&quot;%@&quot;,[nam componentsSeparatedByCharactersInSet:set]);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;####输入框只能输入字母和数字
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *charSet = [[NSCharacterSet characterSetWithCharactersInString:@&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&quot;] invertedSet];
+    NSString *filteredStr = [[string componentsSeparatedByCharactersInSet:charSet] componentsJoinedByString:@&quot;&quot;];
+    if ([string isEqualToString:filteredStr]) {
+        return YES;
+    }
+    return NO;
+}
+&lt;/code&gt;
+####限制输入框输入长度
+```
+#define MAXLENGTH 10&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;(BOOL)textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {&lt;/p&gt;
+
+    &lt;p&gt;NSUInteger oldLength = [textField.text length];
+  NSUInteger replacementLength = [string length];
+  NSUInteger rangeLength = range.length;&lt;/p&gt;
+
+    &lt;p&gt;NSUInteger newLength = oldLength - rangeLength + replacementLength;&lt;/p&gt;
+
+    &lt;p&gt;BOOL returnKey = [string rangeOfString: @”\n”].location != NSNotFound;&lt;/p&gt;
+
+    &lt;p&gt;return newLength &amp;lt;= MAXLENGTH || returnKey;
+}&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;// 对于能输入中文的输入框 还要增加方法
+- (void)textFieldDidChange:(UITextField &lt;em&gt;)textField
+{
+    if (textField == self.titleField) {
+        if (textField.text.length &amp;gt; MAXLENGTH) {
+            textField.text = [textField.text substringToIndex:MAXLENGTH];
+        }
+    }
+}
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+####金额输入框 只能输入一个小数点，小数点后只能输入两位
+&lt;/code&gt;
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    //控制输入框输入长度
+    NSInteger maxLength = 11;
+    NSUInteger oldLength = [textField.text length];
+    NSUInteger replacementLength = [string length];
+    NSUInteger rangeLength = range.length;
+    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+    BOOL returnKey = [string rangeOfString: @”\n”].location != NSNotFound;
+    if (range.location==0 &amp;amp;&amp;amp; [string isEqualToString:@”.”])
+    {
+        return NO;
+    }
+    if ([string isEqualToString:@””]) {
+        return YES;
+    }
+    NSString *checkStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    //正则表达式 数字或小数点后两位
+    NSString *regex = @”^\-?([1-9]\d&lt;/em&gt;|0)(\.\d{0,2})?$”;
+    return (newLength &amp;lt;= maxLength || returnKey) &amp;amp;&amp;amp; [self isValid:checkStr withRegex:regex];
+}&lt;/p&gt;
+
+&lt;p&gt;//检测改变过的文本是否匹配正则表达式，如果匹配表示可以键入，否则不能键入
+- (BOOL) isValid:(NSString&lt;em&gt;)checkStr withRegex:(NSString&lt;/em&gt;)regex{
+    NSPredicate *predicte = [NSPredicate predicateWithFormat:@”SELF MATCHES %@”,regex];
+    return [predicte evaluateWithObject:checkStr];
+}
+```&lt;/p&gt;
+
+&lt;p&gt;####沙盒机制&lt;/p&gt;
+
+&lt;p&gt;沙盒根目录结构：Documents、Library、temp。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Documents：用于存储用户数据，iTunes备份和恢复的时候会包括此目录，所以，苹果建议将程序中建立的或在程序中浏览到的文件数据保存在该目录下。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Library：包含两个子目录：Caches和Preferences。Caches用来存放用户需要换成的文件。Preferences是APP的偏好设置，可以通过NSUserDefaults来读取和设置。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;tmp：用于存放临时文件，这个可以放一些当APP退出后不再需要的文件。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;####获取键盘高度
+```
+[[NSNotificationCenter defaultCenter] addObserver:self
+                                     selector:@selector(keyboardWasShown:)
+                                         name:UIKeyboardDidShowNotification
+                                       object:nil];&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(void)keyboardWasShown:(NSNotification *)notification
+{&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;// Get the size of the keyboard.
+CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;&lt;/p&gt;
+
+&lt;p&gt;//Given size may not account for screen rotation
+int height = MIN(keyboardSize.height,keyboardSize.width);
+int width = MAX(keyboardSize.height,keyboardSize.width);&lt;/p&gt;
+
+&lt;p&gt;//your other code here……….
+}
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+####UILabel lineBreakMode
+&lt;/code&gt;
+lineBreakMode：设置标签文字过长时的显示方式。 &lt;br /&gt;
+label.lineBreakMode = NSLineBreakByCharWrapping;    //以字符为显示单位显示，后面部分省略不显示。 &lt;br /&gt;
+label.lineBreakMode = NSLineBreakByClipping;        //剪切与文本宽度相同的内容长度，后半部分被删除。 &lt;br /&gt;
+label.lineBreakMode = NSLineBreakByTruncatingHead;  //前面部分文字以……方式省略，显示尾部文字内容。 &lt;br /&gt;
+label.lineBreakMode = NSLineBreakByTruncatingMiddle;    //中间的内容以……方式省略，显示头尾的文字内容。 &lt;br /&gt;
+label.lineBreakMode = NSLineBreakByTruncatingTail;  //结尾部分的内容以……方式省略，显示头的文字内容。 &lt;br /&gt;
+label.lineBreakMode = NSLineBreakByWordWrapping;    //以单词为显示单位显示，后面部分省略不显示。
+```&lt;/p&gt;
+
+&lt;p&gt;####UIBarButtonItem 左右距离
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+//左右边距调整增加空的按钮即可
+UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] init];
+UIButton *rgbtn = [[UIButton alloc] initWithFrame:CGRectMake(80, 10, 80, 13)];
+[rgbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+[rgbtn setTitle:btnTitle forState:UIControlStateNormal];
+rgbtn.titleLabel.font = [UIFont systemFontOfSize:BTN_FONT];
+[rgbtn addTarget:self action:@selector(switchTrafic) forControlEvents:UIControlEventTouchUpInside];
+rightBtn.customView = rgbtn;
+UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc]
+                                       initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+                                       target:nil action:nil];
+negativeSpacer.width = -18;
+self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpacer,rightBtn, nil];
+[negativeSpacer release];
+[rightBtn release];
+[rgbtn release];
+&lt;/code&gt;
+####UISearchBar的背景设置为透明
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+[self.mySearchBar setBackgroundColor:[UIColor clearColor]];
+[self.mySearchBar setBackgroundImage:[UIImage new]];
+[self.mySearchBar setTranslucent:YES];
+&lt;/code&gt;
+####根据颜色生成图片
+```
+- (UIImage *) createImageWithColor: (UIColor *) color{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+UIGraphicsEndImageContext();
+return theImage; } ``` ####dyld: Library not loaded: @rpath/XCTest.framework/XCTest 解决办法：工程－&amp;gt;targets－&amp;gt;Bulid Phases－&amp;gt;complie Sources 搜索一下是否有test，有的话，删除一下即可。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;####版本更新跳转到AppStore显示“打开”而不是“更新”的问题
+&amp;gt;原因：AppStore有缓存，导致即使不是最新版app也显示”打开“，不显示”更新“
+&amp;gt;
+&amp;gt;解决方法：杀死AppStore，重新打开即可&lt;/p&gt;</content><summary>#iOS Development Tips</summary></entry><entry><title>2017年开始强制https的问题</title><link href="https://littlesakana.github.io/OverStackFlow/ios/ATS&https/" rel="alternate" type="text/html" title="2017年开始强制https的问题" /><published>2016-02-04T00:00:00+08:00</published><updated>2016-02-04T00:00:00+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/ios/ATS&amp;https</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/ios/ATS&amp;https/">&lt;p&gt;#2017年开始强制https的问题&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iOS9 中默认非HTTPS的协议是被禁止的，我们为了能正常发起http请求，在info.plist文件中添加AppTransportSecuritySettings字典，将NSAllowsArbitraryLoads设置为YES来禁止ATS。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iOS10 从2017年1月1日起苹果提出所有新提交的App默认不允许使用NSAllowsArbitraryLoads来绕过ATS的限制，也就是说强制我们用HTTPS，否则我们提交App可能会被拒绝。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;####解决方案
+通过NSExceptionDomains设置白名单的方式来针对特定的域名开放HTTP内容来通过审核。可以简单理解成，把不支持https协议的接口添加到白名单。&lt;/p&gt;
+
+&lt;p&gt;####操作步骤
+1. 在项目info.plist中添加一个Key：App Transport Security Settings，类型为Dictionary
+2. 在第一步添加的字典内添加一个Key: Exception Domains，类型为Dictionary
+3. 在Exception Domains内添加要支持的域，其中域作为Key，类型为Dictionary
+4. 每个域下面需要设置3个属性：类型为Boolean&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSIncludesSubdomains  YES
+NSExceptionRequiresForwardSecrecy  NO
+NSExceptionAllowsInsecureHTTPLoads  YES
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://img.blog.csdn.net/20160920163718539?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;####应用场景
+1. 第三方不支持https请求的接口
+2. 不支持https协议的图片地址
+3. 不支持https协议的h5网址&lt;/p&gt;
+
+&lt;p&gt;玩的开心……&lt;/p&gt;</content><summary>2017年开始强制https的问题.</summary></entry><entry><title>金额相关精度问题总结</title><link href="https://littlesakana.github.io/OverStackFlow/ios/%E9%87%91%E9%A2%9D%E7%B2%BE%E5%BA%A6%E8%AE%A1%E7%AE%97/" rel="alternate" type="text/html" title="金额相关精度问题总结" /><published>2016-02-03T00:00:00+08:00</published><updated>2016-02-03T00:00:00+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/ios/金额精度计算</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/ios/%E9%87%91%E9%A2%9D%E7%B2%BE%E5%BA%A6%E8%AE%A1%E7%AE%97/">&lt;p&gt;#金额相关精度问题总结
+最近项目中遇到金额计算，CGFloat类型金额计算的过程中，让我吃了不少苦头，先来看下面几行代码:&lt;/p&gt;
+
+&lt;p&gt;###示例代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	CGFloat var1 = 120.66;
+    CGFloat var2 = 120.66;
+    
+    CGFloat var3 = [@&quot;120.66&quot; floatValue];
+    CGFloat var4 = [@&quot;120.66&quot; floatValue];
+    
+    CGFloat var5 = 120.67 - 0.01;
+    
+    CGFloat var6 = [@&quot;120.67&quot; floatValue] - 0.01;
+    
+    bool flag1 = var1 == var2;
+    bool flag2 = var3 == var4;
+    bool flag3 = var3 == var5;
+    bool flag4 = var5 == var6;
+    bool flag5 = var3 == var6;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;略去猜答案的过程，直接看结果&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://s27.postimg.org/5m7cgftvn/Wechat_IMG1.jpg&quot; alt=&quot;图一&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;###现象总结&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;var1 和var2相等&lt;/li&gt;
+  &lt;li&gt;var3 和var4相等&lt;/li&gt;
+  &lt;li&gt;NSString 的 floatValue 会让CGFloat 的精度增加&lt;/li&gt;
+  &lt;li&gt;精度确定的float类型做运算，精度确定 var5 = 120.66&lt;/li&gt;
+  &lt;li&gt;不同精度的float类型做运算，精度会丢失 var6 = 120.65999816894531&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;鉴于CGFloat在处理金额过程中会遇到精度问题，iOS中提供了NSDecimalNumber类来处理精度问题,如果要四舍五入的话还要使用另一个类 NSDecimalNumberHandler&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;###NSDecimalNumber类&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/*
+     讲述下参数的含义:
+     RoundingMode: 简单讲就是你要四舍五入操作的标准.
+typedef NS_ENUM(NSUInteger, NSRoundingMode) {
+    NSRoundPlain,   // 精度位后四舍五入
+    NSRoundDown,    // 精度位后舍去
+    NSRoundUp,      // 精度位后入上去
+    NSRoundBankers  // 精度位后的数值等于5时，分两种情况：5后面还有其他数字（非0），则进位后舍去；若5后面是0（即5是最后一位），则根据5前一位数的奇偶性来判断是否需要进位，奇数进位，偶数舍去。
+};		
+    // Rounding policies :
+	// Original
+	//    value 1.2  1.21  1.25  1.35  1.27
+	// Plain    1.2  1.2   1.3   1.4   1.3
+	// Down     1.2  1.2   1.2   1.3   1.2
+	// Up       1.2  1.3   1.3   1.4   1.3
+	// Bankers  1.2  1.2   1.2   1.4   1.3
+
+     scale : 需要保留的精度。
+     raiseOnExactness : 为YES时在处理精确时如果有错误，就会抛出异常。
+     raiseOnOverflow  : YES时在计算精度向上溢出时会抛出异常，否则返回。
+     raiseOnUnderflow : YES时在计算精度向下溢出时会抛出异常，否则返回.
+     raiseOnDivideByZero : YES时。当除以0时会抛出异常，否则返回。
+     */
+     
+     保留2位小数
+NSDecimalNumberHandler *roundUp = [NSDecimalNumberHandler decimalNumberHandlerWithRoundingMode:NSRoundPlain
+                                                                                            scale:2
+                                                                                 raiseOnExactness:NO
+                                                                                  raiseOnOverflow:NO
+                                                                                 raiseOnUnderflow:NO
+                                                                              raiseOnDivideByZero:YES];                                                                                                                                                 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;计算金额并四舍五入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDecimalNumber *originMoney = [NSDecimalNumber decimalNumberWithString:num];//通过字符串计算金额
+NSDecimalNumber *roundMoney = [subtotal decimalNumberByRoundingAccordingToBehavior:roundUp];//按照设定的规则计算出金额
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;###金额计算实例&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDecimalNumber *varDecimal1 = [NSDecimalNumber decimalNumberWithString:@&quot;120.661&quot;];//120.661
+NSDecimalNumber *varDecimal2 = [NSDecimalNumber decimalNumberWithString:@&quot;120.670&quot;];//120.670
+
+//加
+[varDecimal1 decimalNumberByAdding:varDecimal2];
+
+//减
+NSDecimalNumber *varDecimal3 = [[varDecimal2 decimalNumberBySubtracting:varDecimal1] decimalNumberByRoundingAccordingToBehavior:roundUp];//0.01
+
+//乘
+[varDecimal1 decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@&quot;0.005&quot;]];
+
+//除
+[varDecimal1 decimalNumberByDividingBy:varDecimal2];
+
+//比较
+[varDecimal1 compare:varDecimal2] == NSOrderedAscending //varDecimal1小于varDecimal2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;###总结
+1. 金额相关，后台要传字符串到前台
+2. 计算过程中要用NSDecimalNumber来防止计算过程中出现精度错误
+3. [@”120.67” floatValue] - 0.01 不等于120.66&lt;/p&gt;</content><summary>最近项目中遇到金额计算，CGFloat类型金额计算的过程中，让我吃了不少苦头，先来看下面几行代码.</summary></entry><entry><title>Syntax Highlighting Test</title><link href="https://littlesakana.github.io/OverStackFlow/articles/syntax-highlighting-test/" rel="alternate" type="text/html" title="Syntax Highlighting Test" /><published>2014-11-30T11:08:14+08:00</published><updated>2014-11-30T11:08:14+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/articles/syntax-highlighting-test</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/articles/syntax-highlighting-test/">&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Syntax_highlighting&quot;&gt;Syntax highlighting&lt;/a&gt; is a feature that displays source code, in different colors and fonts according to the category of terms. This feature facilitates writing in a structured language such as a programming language or a markup language as both structures and syntax errors are visually distinct. Highlighting does not affect the meaning of the text itself; it is intended only for human readers.&lt;/p&gt;
+
+&lt;nav class=&quot;toc&quot;&gt;
+
+&lt;/nav&gt;
+
+&lt;h3 id=&quot;code-blocks&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;code&amp;gt;&lt;/code&gt; Blocks&lt;/h3&gt;
+
+&lt;pre&gt;
+	&lt;code&gt;
+.site-title {
+	@include row;
+	@include media($large) {
+		@include span-columns(4);
+	}
+	padding: (.25 * $masthead-height) 0; // fourth the height to center vertically
+	height: $masthead-height;
+	text-decoration: none;
+	color: $black;
+	font-family: $alt-font;
+	font-weight: 700;
+	@include font-size(20,no);
+	line-height: .5 * $masthead-height; // half the height to center vertically
+	text-transform: uppercase;
+}
+	&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;h3 id=&quot;highlighted-code-blocks&quot;&gt;Highlighted Code Blocks&lt;/h3&gt;
+
+&lt;p&gt;To modify styling and highlight colors edit &lt;code class=&quot;highlighter-rouge&quot;&gt;/_sass/_syntax.scss&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;#container&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;margin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;-240px&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Jekyll&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TagIndex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Page&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@site&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@base&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@dir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;index.html&#39;&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read_yaml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;_layouts&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;tag_index.html&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;tag&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;tag_title_prefix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;tag_title_prefix&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Tagged: &#39;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;tag_title_suffix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;tag_title_suffix&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&amp;amp;#8211;&#39;&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;title&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag_title_prefix&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;description&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;An archive of posts tagged &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;standard-code-block&quot;&gt;Standard Code Block&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;nav class=&quot;pagination&quot; role=&quot;navigation&quot;&amp;gt;
+    {% if page.previous %}
+        &amp;lt;a href=&quot;{{ site.url }}{{ page.previous.url }}&quot; class=&quot;btn&quot; title=&quot;{{ page.previous.title }}&quot;&amp;gt;Previous article&amp;lt;/a&amp;gt;
+    {% endif %}
+    {% if page.next %}
+        &amp;lt;a href=&quot;{{ site.url }}{{ page.next.url }}&quot; class=&quot;btn&quot; title=&quot;{{ page.next.title }}&quot;&amp;gt;Next article&amp;lt;/a&amp;gt;
+    {% endif %}
+&amp;lt;/nav&amp;gt;&amp;lt;!-- /.pagination --&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;fenced-code-blocks&quot;&gt;Fenced Code Blocks&lt;/h3&gt;
+
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;#container&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;margin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;-240px&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;nav&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pagination&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;role=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navigation&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    {% if page.previous %}
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ site.url }}{{ page.previous.url }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;title=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ page.previous.title }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Previous article&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+    {% endif %}
+    {% if page.next %}
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ site.url }}{{ page.next.url }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;title=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ page.next.title }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Next article&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+    {% endif %}
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nav&amp;gt;&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- /.pagination --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Jekyll&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TagIndex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Page&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@site&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@base&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@dir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;index.html&#39;&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read_yaml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;_layouts&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;tag_index.html&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;tag&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;tag_title_prefix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;tag_title_prefix&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Tagged: &#39;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;tag_title_suffix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;tag_title_suffix&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&amp;amp;#8211;&#39;&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;title&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag_title_prefix&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;description&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;An archive of posts tagged &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;github-gist-embed&quot;&gt;GitHub Gist Embed&lt;/h3&gt;
+
+&lt;p&gt;An example of a Gist embed below.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;404: Not Found
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/mmistakes/6589546.js&quot;&gt; &lt;/script&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/8531391.js&quot;&gt; &lt;/script&gt;</content><summary>Demo post to test the various ways of using syntax highlighting.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://littlesakana.github.io/OverStackFlow{&quot;feature&quot;=&gt;nil, &quot;teaser&quot;=&gt;nil, &quot;thumb&quot;=&gt;nil}" /></entry><entry><title>Author Override</title><link href="https://littlesakana.github.io/OverStackFlow/articles/author-override/" rel="alternate" type="text/html" title="Author Override" /><published>2014-06-24T04:19:16+08:00</published><updated>2014-06-24T04:19:16+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/articles/author-override</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/articles/author-override/">&lt;p&gt;For those of you who may have content written by multiple authors on your site you can assign different authors to each post if desired.&lt;/p&gt;
+
+&lt;p&gt;Traditionally you would assign a global author for the entire site and those attributes would be used in all post bylines, social networking links in the footer, Twitter Cards, and Google Authorship. These &lt;code class=&quot;highlighter-rouge&quot;&gt;owner&lt;/code&gt; variables defined in your &lt;code class=&quot;highlighter-rouge&quot;&gt;config.yml&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Start by creating an &lt;code class=&quot;highlighter-rouge&quot;&gt;authors.yml&lt;/code&gt; file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_data&lt;/code&gt; folder and add your authors using the following format.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Authors&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;billy_rick&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Billy Rick&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://thewhip.com&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;billy@rick.com&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;bio&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;What&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;do&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;you&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;want,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;jewels?&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;am&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;very&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;extravagant&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;man.&quot;&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;avatar&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;bio-photo.jpg&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;twitter&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;extravagantman&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;cornelius_fiddlebone&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Cornelius Fiddlebone&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;cornelius@thewhip.com&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;bio&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;ordered&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;what?&quot;&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;avatar&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;bio-photo.jpg&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;twitter&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;rhymeswithsackit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To assign Billy Rick as an author for our post. We’d add the following YAML front matter to a post:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;billy_rick&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content><author><name>billy_rick</name></author><summary>A post to test author overrides using a data file.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://littlesakana.github.io/OverStackFlow{&quot;feature&quot;=&gt;nil, &quot;teaser&quot;=&gt;nil, &quot;thumb&quot;=&gt;nil}" /></entry><entry><title>Video Post Test</title><link href="https://littlesakana.github.io/OverStackFlow/articles/video-post-test/" rel="alternate" type="text/html" title="Video Post Test" /><published>2014-06-01T11:14:02+08:00</published><updated>2014-06-01T11:14:02+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/articles/video-post-test</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/articles/video-post-test/">&lt;p&gt;Here’s a sample video to test FitVid.js&lt;/p&gt;
+
+&lt;p&gt;If this is working correctly the video should fill the main content container.&lt;/p&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;//www.youtube.com/embed/9e1nPyHXCFQ&quot; frameborder=&quot;0&quot;&gt; &lt;/iframe&gt;</content><category term="video" /><summary>A post with a YouTube video.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://littlesakana.github.io/OverStackFlow{&quot;feature&quot;=&gt;nil, &quot;teaser&quot;=&gt;nil}" /></entry><entry><title>Image Grids</title><link href="https://littlesakana.github.io/OverStackFlow/articles/image-grids/" rel="alternate" type="text/html" title="Image Grids" /><published>2014-05-30T23:51:25+08:00</published><updated>2014-05-30T23:51:25+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/articles/image-grids</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/articles/image-grids/">&lt;p&gt;This is a post to test image grids.&lt;/p&gt;
+
+&lt;ul class=&quot;th-grid&quot;&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;http://placehold.it/150x150.gif&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><summary>Demoing the various thumbnail grid styles.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://littlesakana.github.io/OverStackFlow{&quot;feature&quot;=&gt;nil, &quot;teaser&quot;=&gt;nil}" /></entry><entry><title>Another Media Post with Large Feature Image</title><link href="https://littlesakana.github.io/OverStackFlow/javascript/another-sample-media-page/" rel="alternate" type="text/html" title="Another Media Post with Large Feature Image" /><published>2014-05-10T00:00:00+08:00</published><updated>2014-05-10T00:00:00+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/javascript/another-sample-media-page</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/javascript/another-sample-media-page/">&lt;p&gt;This is a sample media post with a large feature image up top and tons of text. Odio ad blue bottle vinyl, 90’s narwhal commodo bitters pour-over nostrud. Ugh est hashtag in, fingerstache adipisicing laboris esse Pinterest shabby chic Portland. Shoreditch bicycle rights anim, flexitarian laboris put a bird on it vinyl cupidatat narwhal. Hashtag artisan skateboard, flannel Bushwick nesciunt salvia aute fixie do plaid post-ironic dolor McSweeney’s. Cliche pour-over chambray nulla four loko skateboard sapiente hashtag.&lt;/p&gt;
+
+&lt;h2 id=&quot;thundercats-ho&quot;&gt;Thundercats Ho!&lt;/h2&gt;
+
+&lt;p&gt;Fingerstache thundercats Williamsburg, deep v scenester Banksy ennui vinyl selfies mollit biodiesel duis odio pop-up. Banksy 3 wolf moon try-hard, sapiente enim stumptown deep v ad letterpress. Squid beard brunch, exercitation raw denim yr sint direct trade. Raw denim narwhal id, flannel DIY McSweeney’s seitan. Letterpress artisan bespoke accusamus, meggings laboris consequat Truffaut qui in seitan. Sustainable cornhole Schlitz, twee Cosby sweater banh mi deep v forage letterpress flannel whatever keffiyeh. Sartorial cred irure, semiotics ethical sed blue bottle nihil letterpress.&lt;/p&gt;
+
+&lt;h2 id=&quot;tools-used&quot;&gt;Tools Used&lt;/h2&gt;
+
+&lt;p&gt;Occupy et selvage squid, pug brunch blog nesciunt hashtag mumblecore skateboard yr kogi. Ugh small batch swag four loko. Fap post-ironic qui tote bag farm-to-table american apparel scenester keffiyeh vero, swag non pour-over gentrify authentic pitchfork. Schlitz scenester lo-fi voluptate, tote bag irony bicycle rights pariatur vero Vice freegan wayfarers exercitation nisi shoreditch. Chambray tofu vero sed. Street art swag literally leggings, Cosby sweater mixtape PBR lomo Banksy non in pitchfork ennui McSweeney’s selfies. Odd Future Banksy non authentic.&lt;/p&gt;
+
+&lt;p&gt;Aliquip enim artisan dolor post-ironic. Pug tote bag Marfa, deserunt pour-over Portland wolf eu odio intelligentsia american apparel ugh ea. Sunt viral et, 3 wolf moon gastropub pug id. Id fashion axe est typewriter, mlkshk Portland art party aute brunch. Sint pork belly Cosby sweater, deep v mumblecore kitsch american apparel. Try-hard direct trade tumblr sint skateboard. Adipisicing bitters excepteur biodiesel, pickled gastropub aute veniam.&lt;/p&gt;</content><summary>Custom written post descriptions are the way to go... if you&#39;re not lazy.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://littlesakana.github.io/OverStackFlow{&quot;feature&quot;=&gt;&quot;branch-1600x800.jpg&quot;, &quot;teaser&quot;=&gt;&quot;branch-400x250.jpg&quot;, &quot;credit&quot;=&gt;&quot;Michael Rose&quot;, &quot;creditlink&quot;=&gt;&quot;http://mademistakes.com&quot;}" /></entry><entry><title>Welcome to Jekyll!</title><link href="https://littlesakana.github.io/OverStackFlow/articles/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2014-02-17T00:00:00+08:00</published><updated>2014-02-17T00:00:00+08:00</updated><id>https://littlesakana.github.io/OverStackFlow/articles/welcome-to-jekyll</id><content type="html" xml:base="https://littlesakana.github.io/OverStackFlow/articles/welcome-to-jekyll/">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory - edit this post and re-build (or run with the &lt;code class=&quot;highlighter-rouge&quot;&gt;-w&lt;/code&gt; switch) to see your changes!
+To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention: YYYY-MM-DD-name-of-post.ext.&lt;/p&gt;
+
+&lt;nav class=&quot;toc&quot;&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#sample-heading&quot; id=&quot;markdown-toc-sample-heading&quot;&gt;Sample Heading&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/nav&gt;
+
+&lt;h2 id=&quot;sample-heading&quot;&gt;Sample Heading&lt;/h2&gt;
+
+&lt;h3 id=&quot;sample-heading-2&quot;&gt;Sample Heading 2&lt;/h3&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Tom&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &#39;Hi, Tom&#39; to STDOUT.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;.&lt;/p&gt;</content><summary>You’ll find this post in your _posts directory - edit this post and re-build (or run with the -w switch) to see your changes!
+To add new posts, simply add a file in the _posts directory that follows the convention: YYYY-MM-DD-name-of-post.ext.</summary></entry></feed>
