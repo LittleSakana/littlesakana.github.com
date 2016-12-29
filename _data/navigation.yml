@@ -3,19 +3,19 @@
 - title: iOS
   url: /iOS/
   excerpt: "iOS开发学习"
-  image: 400x250.jpg
+  #image: iOS.png
 
 - title: Git
   url: /Git/
   excerpt: "Git使用学习"
-  image: 400x250.gif
+  #image: git.png
 
 - title: JavaScript
   url: /JavaScript/
   excerpt: "JavaScript开发学习"
-  image: 400x250.gif
+  #image: JavaScript.png
 
 - title: About
   url: /about/
   excerpt: "All about Littlesakana"
-  image: 400x250.gif
+  #image: 400x250.gif
