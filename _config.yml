@@ -5,7 +5,7 @@ description: "开发学习过程笔记及开发经验积累，以供参考"
 logo: 120x120.gif
 teaser: 400x250.gif
 locale: en_CN
-url: "https://littlesakana.github.io/OverStackFlow"
+url: "https://littlesakana.github.io"
 feed:
   path: atom.xml
 
