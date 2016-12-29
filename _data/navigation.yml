@@ -3,17 +3,17 @@
 - title: iOS
   url: /iOS/
   excerpt: "iOS开发学习"
-  #image: iOS.png
+  image: iOS.png
 
 - title: Git
   url: /Git/
   excerpt: "Git使用学习"
-  #image: git.png
+  image: git.png
 
 - title: JavaScript
   url: /JavaScript/
   excerpt: "JavaScript开发学习"
-  #image: JavaScript.png
+  image: JavaScript.png
 
 - title: About
   url: /about/
