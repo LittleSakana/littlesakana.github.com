@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>iOS Development Tips • LittleSakana Development</title>
+    <meta name="description" content="DevelopTips">
+    <meta name="keywords" content="">
+    
+    	<!-- Twitter Cards -->
+	<meta name="twitter:title" content="iOS Development Tips">
+	<meta name="twitter:description" content="DevelopTips">
+	<meta name="twitter:site" content="@Littlesakana">
+	<meta name="twitter:creator" content="@Littlesakana">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:image" content="/images/120x120.gif">
+	
+	<!-- Open Graph -->
+	<meta property="og:locale" content="en_CN">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="iOS Development Tips">
+	<meta property="og:description" content="DevelopTips">
+	<meta property="og:url" content="/ios/iOSDevelopTips/">
+	<meta property="og:site_name" content="LittleSakana Development">
+
+    <link rel="canonical" href="/ios/iOSDevelopTips/">
+
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="LittleSakana Development Atom Feed">
+    <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- HTML5 Shiv and Media Query Support for IE -->
+    <!--[if lt IE 9]>
+      <script src="/js/vendor/html5shiv.min.js"></script>
+      <script src="/js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body id="js-body">
+    <!--[if lt IE 9]><div class="upgrade notice-warning"><strong>Your browser is quite old!</strong> Why not <a href="http://whatbrowser.org/">upgrade to a newer one</a> to better enjoy this site?</div><![endif]-->
+
+    <header id="masthead">
+  <div class="inner-wrap">
+    <a href="/" class="site-title">LittleSakana Development</a>
+    <nav role="navigation" class="menu top-menu">
+        <ul class="menu-item">
+	<li class="home"><a href="/">LittleSakana Development</a></li>
+	
+    
+    <li><a href="/iOS/" >iOS</a></li>
+  
+    
+    <li><a href="/Git/" >Git</a></li>
+  
+    
+    <li><a href="/JavaScript/" >JavaScript</a></li>
+  
+    
+    <li><a href="/about/" >About</a></li>
+  
+</ul>
+    </nav>
+  </div><!-- /.inner-wrap -->
+</header><!-- /.masthead -->
+    <nav role="navigation" id="js-menu" class="sliding-menu-content">
+  <h5>LittleSakana Development <span></span></h5>
+  <ul class="menu-item">
+    <li>
+      <a href="/iOS/">
+        <img src="/images/iOS.png" alt="teaser" class="teaser">
+        <div class="title">iOS</div>
+        <p class="excerpt">iOS开发学习</p>
+      </a>
+    </li><li>
+      <a href="/Git/">
+        <img src="/images/git.png" alt="teaser" class="teaser">
+        <div class="title">Git</div>
+        <p class="excerpt">Git使用学习</p>
+      </a>
+    </li><li>
+      <a href="/JavaScript/">
+        <img src="/images/JavaScript.png" alt="teaser" class="teaser">
+        <div class="title">JavaScript</div>
+        <p class="excerpt">JavaScript开发学习</p>
+      </a>
+    </li><li>
+      <a href="/about/">
+        
+        <div class="title">About</div>
+        <p class="excerpt">All about Littlesakana</p>
+      </a>
+    </li>
+  </ul>
+</nav>
+<button type="button" id="js-menu-trigger" class="sliding-menu-button lines-button x2" role="button" aria-label="Toggle Navigation">
+  <span class="nav-lines"></span>
+</button>
+
+<div id="js-menu-screen" class="menu-screen"></div>
+
+
+    <div id="page-wrapper">
+      <div id="main" role="main">
+	<article class="wrap" itemscope itemtype="http://schema.org/Article">
+		
+		
+  <nav class="breadcrumbs">
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="" itemprop="url">
+        <span itemprop="title">Home</span>
+      </a> › 
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="/iOS/" itemprop="url">
+        <span itemprop="title">Ios</span>
+      </a>
+    </span>
+  </nav><!-- /.breadcrumbs -->
+
+		<div class="page-title">
+			<h1>iOS Development Tips</h1>
+		</div>
+		<div class="inner-wrap">
+			<div id="content" class="page-content" itemprop="articleBody">
+				<h4 id="section">数组拼接字符串</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *arr = [NSArray arrayWithObjects:@"I", @"love", @"you", nil];
+NSLog(@"%@",[arr componentsJoinedByString:@""]);//打印Iloveyou
+NSLog(@"%@",[arr componentsJoinedByString:@" "]);//打印I love you
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">- (NSArray&lt;NSString *&gt; *)componentsSeparatedByCharactersInSet:(NSCharacterSet *)separator</code>方法的而作用是通过set来进行分割字符串，返回分割后的数组。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"0123456"];
+NSString *nam = @"1g2h45j3d688";
+NSLog(@"%@",[nam componentsSeparatedByCharactersInSet:set]);
+</code></pre>
+</div>
+
+<h4 id="section-1">输入框只能输入字母和数字</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *charSet = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"] invertedSet];
+    NSString *filteredStr = [[string componentsSeparatedByCharactersInSet:charSet] componentsJoinedByString:@""];
+    if ([string isEqualToString:filteredStr]) {
+        return YES;
+    }
+    return NO;
+}
+</code></pre>
+</div>
+
+<h4 id="section-2">限制输入框输入长度</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#define MAXLENGTH 10
+
+- (BOOL)textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+
+    NSUInteger oldLength = [textField.text length];
+    NSUInteger replacementLength = [string length];
+    NSUInteger rangeLength = range.length;
+
+    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+
+    BOOL returnKey = [string rangeOfString: @"\n"].location != NSNotFound;
+
+    return newLength &lt;= MAXLENGTH || returnKey;
+}
+
+// 对于能输入中文的输入框 还要增加方法
+- (void)textFieldDidChange:(UITextField *)textField
+{
+    if (textField == self.titleField) {
+        if (textField.text.length &gt; MAXLENGTH) {
+            textField.text = [textField.text substringToIndex:MAXLENGTH];
+        }
+    }
+}
+</code></pre>
+</div>
+
+<h4 id="section-3">金额输入框 只能输入一个小数点，小数点后只能输入两位</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    //控制输入框输入长度
+    NSInteger maxLength = 11;
+    NSUInteger oldLength = [textField.text length];
+    NSUInteger replacementLength = [string length];
+    NSUInteger rangeLength = range.length;
+    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+    BOOL returnKey = [string rangeOfString: @"\n"].location != NSNotFound;
+    if (range.location==0 &amp;&amp; [string isEqualToString:@"."])
+    {
+        return NO;
+    }
+    if ([string isEqualToString:@""]) {
+        return YES;
+    }
+    NSString *checkStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    //正则表达式 数字或小数点后两位
+    NSString *regex = @"^\\-?([1-9]\\d*|0)(\\.\\d{0,2})?$";
+    return (newLength &lt;= maxLength || returnKey) &amp;&amp; [self isValid:checkStr withRegex:regex];
+}
+
+//检测改变过的文本是否匹配正则表达式，如果匹配表示可以键入，否则不能键入
+- (BOOL) isValid:(NSString*)checkStr withRegex:(NSString*)regex{
+    NSPredicate *predicte = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
+    return [predicte evaluateWithObject:checkStr];
+}
+</code></pre>
+</div>
+
+<h4 id="section-4">沙盒机制</h4>
+
+<p>沙盒根目录结构：Documents、Library、temp。</p>
+
+<ol>
+  <li>
+    <p>Documents：用于存储用户数据，iTunes备份和恢复的时候会包括此目录，所以，苹果建议将程序中建立的或在程序中浏览到的文件数据保存在该目录下。</p>
+  </li>
+  <li>
+    <p>Library：包含两个子目录：Caches和Preferences。Caches用来存放用户需要换成的文件。Preferences是APP的偏好设置，可以通过NSUserDefaults来读取和设置。</p>
+  </li>
+  <li>
+    <p>tmp：用于存放临时文件，这个可以放一些当APP退出后不再需要的文件。</p>
+  </li>
+</ol>
+
+<h4 id="section-5">获取键盘高度</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[[NSNotificationCenter defaultCenter] addObserver:self
+                                     selector:@selector(keyboardWasShown:)
+                                         name:UIKeyboardDidShowNotification
+                                       object:nil];
+
+- (void)keyboardWasShown:(NSNotification *)notification
+{
+
+// Get the size of the keyboard.
+CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+
+//Given size may not account for screen rotation
+int height = MIN(keyboardSize.height,keyboardSize.width);
+int width = MAX(keyboardSize.height,keyboardSize.width);
+
+//your other code here..........
+}
+</code></pre>
+</div>
+
+<h4 id="uilabel-linebreakmode">UILabel lineBreakMode</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lineBreakMode：设置标签文字过长时的显示方式。   
+label.lineBreakMode = NSLineBreakByCharWrapping;    //以字符为显示单位显示，后面部分省略不显示。   
+label.lineBreakMode = NSLineBreakByClipping;        //剪切与文本宽度相同的内容长度，后半部分被删除。   
+label.lineBreakMode = NSLineBreakByTruncatingHead;  //前面部分文字以……方式省略，显示尾部文字内容。   
+label.lineBreakMode = NSLineBreakByTruncatingMiddle;    //中间的内容以……方式省略，显示头尾的文字内容。   
+label.lineBreakMode = NSLineBreakByTruncatingTail;  //结尾部分的内容以……方式省略，显示头的文字内容。   
+label.lineBreakMode = NSLineBreakByWordWrapping;    //以单词为显示单位显示，后面部分省略不显示。
+</code></pre>
+</div>
+
+<h4 id="uibarbuttonitem-">UIBarButtonItem 左右距离</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//左右边距调整增加空的按钮即可
+UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] init];
+UIButton *rgbtn = [[UIButton alloc] initWithFrame:CGRectMake(80, 10, 80, 13)];
+[rgbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+[rgbtn setTitle:btnTitle forState:UIControlStateNormal];
+rgbtn.titleLabel.font = [UIFont systemFontOfSize:BTN_FONT];
+[rgbtn addTarget:self action:@selector(switchTrafic) forControlEvents:UIControlEventTouchUpInside];
+rightBtn.customView = rgbtn;
+UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc]
+                                       initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+                                       target:nil action:nil];
+negativeSpacer.width = -18;
+self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpacer,rightBtn, nil];
+[negativeSpacer release];
+[rightBtn release];
+[rgbtn release];
+</code></pre>
+</div>
+
+<h4 id="uisearchbar">UISearchBar的背景设置为透明</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[self.mySearchBar setBackgroundColor:[UIColor clearColor]];
+[self.mySearchBar setBackgroundImage:[UIImage new]];
+[self.mySearchBar setTranslucent:YES];
+</code></pre>
+</div>
+
+<h4 id="section-6">根据颜色生成图片</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (UIImage *) createImageWithColor: (UIColor *) color{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
+</code></pre>
+</div>
+
+<h4 id="dyld-library-not-loaded-rpathxctestframeworkxctest">dyld: Library not loaded: @rpath/XCTest.framework/XCTest</h4>
+
+<p>解决办法：工程－&gt;targets－&gt;Bulid Phases－&gt;complie Sources 搜索一下是否有test，有的话，删除一下即可。</p>
+
+<h4 id="appstore">版本更新跳转到AppStore显示“打开”而不是“更新”的问题</h4>
+
+<blockquote>
+  <p>原因：AppStore有缓存，导致即使不是最新版app也显示”打开“，不显示”更新“</p>
+
+  <p>解决方法：杀死AppStore，重新打开即可</p>
+</blockquote>
+
+				<hr />
+				<footer class="page-footer">
+					
+
+<div class="author-image">
+	<img src="/images/bio-photo.jpg" alt="Kevin">
+</div><!-- ./author-image -->
+<div class="author-content">
+	<h3 class="author-name" > <a href="http://overStackFlow.com" itemprop="author">Kevin</a></h3>
+	<p class="author-bio">Time traveling designer.</p>
+</div><!-- ./author-content -->
+					
+					<div class="page-meta">
+	<p> <time datetime="2014-08-05T00:00:00Z" itemprop="datePublished">August 05, 2014</time></p>
+</div><!-- /.page-meta -->
+				</footer><!-- /.footer -->
+				<aside>
+					
+				</aside>
+			</div><!-- /.content -->
+		</div><!-- /.inner-wrap -->
+	</article><!-- ./wrap -->
+</div><!-- /#main -->
+
+      <footer role="contentinfo" id="site-footer">
+	<nav role="navigation" class="menu bottom-menu">
+		<ul class="menu-item">
+		
+		</ul>
+	</nav><!-- /.bottom-menu -->
+	<p class="copyright">&#169; 2016 <a href="">LittleSakana Development</a> powered by <a href="http://jekyllrb.com">Jekyll</a> + <a href="http://mmistakes.github.io/skinny-bones-jekyll/">Skinny Bones</a>.</p>
+</footer>
+    </div>
+
+    <script src="/js/vendor/jquery-1.9.1.min.js"></script>
+    <script src="/js/main.js"></script>
+
+  </body>
+
+</html>

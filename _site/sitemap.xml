@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>/JSPatch%25E4%25BB%258E%25E5%2585%25A5%25E9%2597%25A8%25E5%2588%25B0%25E6%2594%25BE%25E5%25BC%2583/</loc>
-<lastmod>2016-02-06T00:00:00+08:00</lastmod>
-</url>
-<url>
-<loc>/iOSDevelopTips/</loc>
-<lastmod>2016-02-05T00:00:00+08:00</lastmod>
-</url>
-<url>
 <loc>/ios/ATS&https/</loc>
-<lastmod>2016-02-04T00:00:00+08:00</lastmod>
+<lastmod>2016-10-04T00:00:00+08:00</lastmod>
 </url>
 <url>
 <loc>/ios/%25E9%2587%2591%25E9%25A2%259D%25E7%25B2%25BE%25E5%25BA%25A6%25E8%25AE%25A1%25E7%25AE%2597/</loc>
 <lastmod>2016-02-03T00:00:00+08:00</lastmod>
 </url>
 <url>
+<loc>/ios/JSPatch%25E4%25BB%258E%25E5%2585%25A5%25E9%2597%25A8%25E5%2588%25B0%25E6%2594%25BE%25E5%25BC%2583/</loc>
+<lastmod>2015-11-06T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>/articles/syntax-highlighting-test/</loc>
 <lastmod>2014-11-30T11:08:14+08:00</lastmod>
+</url>
+<url>
+<loc>/ios/iOSDevelopTips/</loc>
+<lastmod>2014-08-05T00:00:00+08:00</lastmod>
 </url>
 <url>
 <loc>/articles/author-override/</loc>

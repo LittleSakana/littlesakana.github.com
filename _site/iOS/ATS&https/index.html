@@ -73,19 +73,19 @@
   <ul class="menu-item">
     <li>
       <a href="/iOS/">
-        
+        <img src="/images/iOS.png" alt="teaser" class="teaser">
         <div class="title">iOS</div>
         <p class="excerpt">iOS开发学习</p>
       </a>
     </li><li>
       <a href="/Git/">
-        
+        <img src="/images/git.png" alt="teaser" class="teaser">
         <div class="title">Git</div>
         <p class="excerpt">Git使用学习</p>
       </a>
     </li><li>
       <a href="/JavaScript/">
-        
+        <img src="/images/JavaScript.png" alt="teaser" class="teaser">
         <div class="title">JavaScript</div>
         <p class="excerpt">JavaScript开发学习</p>
       </a>
@@ -127,9 +127,7 @@
 		</div>
 		<div class="inner-wrap">
 			<div id="content" class="page-content" itemprop="articleBody">
-				<p>#2017年开始强制https的问题</p>
-
-<blockquote>
+				<blockquote>
   <p>iOS9 中默认非HTTPS的协议是被禁止的，我们为了能正常发起http请求，在info.plist文件中添加AppTransportSecuritySettings字典，将NSAllowsArbitraryLoads设置为YES来禁止ATS。</p>
 </blockquote>
 
@@ -137,14 +135,16 @@
   <p>iOS10 从2017年1月1日起苹果提出所有新提交的App默认不允许使用NSAllowsArbitraryLoads来绕过ATS的限制，也就是说强制我们用HTTPS，否则我们提交App可能会被拒绝。</p>
 </blockquote>
 
-<p>####解决方案
-通过NSExceptionDomains设置白名单的方式来针对特定的域名开放HTTP内容来通过审核。可以简单理解成，把不支持https协议的接口添加到白名单。</p>
+<h4 id="section">解决方案</h4>
+<p>通过NSExceptionDomains设置白名单的方式来针对特定的域名开放HTTP内容来通过审核。可以简单理解成，把不支持https协议的接口添加到白名单。</p>
 
-<p>####操作步骤
-1. 在项目info.plist中添加一个Key：App Transport Security Settings，类型为Dictionary
-2. 在第一步添加的字典内添加一个Key: Exception Domains，类型为Dictionary
-3. 在Exception Domains内添加要支持的域，其中域作为Key，类型为Dictionary
-4. 每个域下面需要设置3个属性：类型为Boolean</p>
+<h4 id="section-1">操作步骤</h4>
+<ol>
+  <li>在项目info.plist中添加一个Key：App Transport Security Settings，类型为Dictionary</li>
+  <li>在第一步添加的字典内添加一个Key: Exception Domains，类型为Dictionary</li>
+  <li>在Exception Domains内添加要支持的域，其中域作为Key，类型为Dictionary</li>
+  <li>每个域下面需要设置3个属性：类型为Boolean</li>
+</ol>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>NSIncludesSubdomains  YES
 NSExceptionRequiresForwardSecrecy  NO
@@ -153,10 +153,12 @@ NSExceptionAllowsInsecureHTTPLoads  YES
 </div>
 <p><img src="http://img.blog.csdn.net/20160920163718539?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" /></p>
 
-<p>####应用场景
-1. 第三方不支持https请求的接口
-2. 不支持https协议的图片地址
-3. 不支持https协议的h5网址</p>
+<h4 id="section-2">应用场景</h4>
+<ol>
+  <li>第三方不支持https请求的接口</li>
+  <li>不支持https协议的图片地址</li>
+  <li>不支持https协议的h5网址</li>
+</ol>
 
 <p>玩的开心……</p>
 
@@ -174,7 +176,7 @@ NSExceptionAllowsInsecureHTTPLoads  YES
 </div><!-- ./author-content -->
 					
 					<div class="page-meta">
-	<p> <time datetime="2016-02-04T00:00:00Z" itemprop="datePublished">February 04, 2016</time></p>
+	<p> <time datetime="2016-10-04T00:00:00Z" itemprop="datePublished">October 04, 2016</time></p>
 </div><!-- /.page-meta -->
 				</footer><!-- /.footer -->
 				<aside>

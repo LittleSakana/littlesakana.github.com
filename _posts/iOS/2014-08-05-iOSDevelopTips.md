@@ -1,6 +1,14 @@
-#iOS Development Tips
+---
+layout: article
+title: "iOS Development Tips"
+categories: iOS
+excerpt: "DevelopTips"
+ads: true
+share: false
+image:
+---
 
-####数组拼接字符串
+#### 数组拼接字符串
 
 ```
 NSArray *arr = [NSArray arrayWithObjects:@"I", @"love", @"you", nil];
@@ -14,7 +22,9 @@ NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"01234
 NSString *nam = @"1g2h45j3d688";
 NSLog(@"%@",[nam componentsSeparatedByCharactersInSet:set]);
 ```
-####输入框只能输入字母和数字
+
+#### 输入框只能输入字母和数字
+
 ```
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSCharacterSet *charSet = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"] invertedSet];
@@ -25,7 +35,9 @@ NSLog(@"%@",[nam componentsSeparatedByCharactersInSet:set]);
     return NO;
 }
 ```
-####限制输入框输入长度
+
+#### 限制输入框输入长度
+
 ```
 #define MAXLENGTH 10
 
@@ -52,7 +64,9 @@ NSLog(@"%@",[nam componentsSeparatedByCharactersInSet:set]);
     }
 }
 ```
-####金额输入框 只能输入一个小数点，小数点后只能输入两位
+
+#### 金额输入框 只能输入一个小数点，小数点后只能输入两位
+
 ```
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     //控制输入框输入长度
@@ -82,7 +96,7 @@ NSLog(@"%@",[nam componentsSeparatedByCharactersInSet:set]);
 }
 ```
 
-####沙盒机制
+#### 沙盒机制
 
 沙盒根目录结构：Documents、Library、temp。
 
@@ -92,7 +106,8 @@ NSLog(@"%@",[nam componentsSeparatedByCharactersInSet:set]);
 
 3. tmp：用于存放临时文件，这个可以放一些当APP退出后不再需要的文件。
 
-####获取键盘高度
+#### 获取键盘高度
+
 ```
 [[NSNotificationCenter defaultCenter] addObserver:self
                                      selector:@selector(keyboardWasShown:)
@@ -112,7 +127,9 @@ int width = MAX(keyboardSize.height,keyboardSize.width);
 //your other code here..........
 }
 ```
-####UILabel lineBreakMode
+
+#### UILabel lineBreakMode
+
 ```
 lineBreakMode：设置标签文字过长时的显示方式。   
 label.lineBreakMode = NSLineBreakByCharWrapping;    //以字符为显示单位显示，后面部分省略不显示。   
@@ -123,7 +140,8 @@ label.lineBreakMode = NSLineBreakByTruncatingTail;  //结尾部分的内容以�
 label.lineBreakMode = NSLineBreakByWordWrapping;    //以单词为显示单位显示，后面部分省略不显示。
 ```
 
-####UIBarButtonItem 左右距离
+#### UIBarButtonItem 左右距离
+
 ```
 //左右边距调整增加空的按钮即可
 UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] init];
@@ -142,13 +160,17 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
 [rightBtn release];
 [rgbtn release];
 ```
-####UISearchBar的背景设置为透明
+
+#### UISearchBar的背景设置为透明
+
 ```
 [self.mySearchBar setBackgroundColor:[UIColor clearColor]];
 [self.mySearchBar setBackgroundImage:[UIImage new]];
 [self.mySearchBar setTranslucent:YES];
 ```
-####根据颜色生成图片
+
+#### 根据颜色生成图片
+
 ```
 - (UIImage *) createImageWithColor: (UIColor *) color{
     CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
@@ -162,10 +184,13 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
     return theImage;
 }
 ```
-####dyld: Library not loaded: @rpath/XCTest.framework/XCTest
+
+#### dyld: Library not loaded: @rpath/XCTest.framework/XCTest
+
 解决办法：工程－>targets－>Bulid Phases－>complie Sources 搜索一下是否有test，有的话，删除一下即可。
 
-####版本更新跳转到AppStore显示“打开”而不是“更新”的问题
+#### 版本更新跳转到AppStore显示“打开”而不是“更新”的问题
+
 >原因：AppStore有缓存，导致即使不是最新版app也显示”打开“，不显示”更新“
 >
 >解决方法：杀死AppStore，重新打开即可
