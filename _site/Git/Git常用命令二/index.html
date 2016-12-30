@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>常用基础命令合集 • LittleSakana Development</title>
+    <meta name="description" content="所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。">
+    <meta name="keywords" content="">
+    
+    	<!-- Twitter Cards -->
+	<meta name="twitter:title" content="常用基础命令合集">
+	<meta name="twitter:description" content="所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。">
+	<meta name="twitter:site" content="@Littlesakana">
+	<meta name="twitter:creator" content="@Littlesakana">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:image" content="/images/120x120.gif">
+	
+	<!-- Open Graph -->
+	<meta property="og:locale" content="en_CN">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="常用基础命令合集">
+	<meta property="og:description" content="所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。">
+	<meta property="og:url" content="/git/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E4%BA%8C/">
+	<meta property="og:site_name" content="LittleSakana Development">
+
+    <link rel="canonical" href="/git/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E4%BA%8C/">
+
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="LittleSakana Development Atom Feed">
+    <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- HTML5 Shiv and Media Query Support for IE -->
+    <!--[if lt IE 9]>
+      <script src="/js/vendor/html5shiv.min.js"></script>
+      <script src="/js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body id="js-body">
+    <!--[if lt IE 9]><div class="upgrade notice-warning"><strong>Your browser is quite old!</strong> Why not <a href="http://whatbrowser.org/">upgrade to a newer one</a> to better enjoy this site?</div><![endif]-->
+
+    <header id="masthead">
+  <div class="inner-wrap">
+    <a href="/" class="site-title">LittleSakana Development</a>
+    <nav role="navigation" class="menu top-menu">
+        <ul class="menu-item">
+	<li class="home"><a href="/">LittleSakana Development</a></li>
+	
+    
+    <li><a href="/iOS/" >iOS</a></li>
+  
+    
+    <li><a href="/Git/" >Git</a></li>
+  
+    
+    <li><a href="/JavaScript/" >JavaScript</a></li>
+  
+    
+    <li><a href="/about/" >About</a></li>
+  
+</ul>
+    </nav>
+  </div><!-- /.inner-wrap -->
+</header><!-- /.masthead -->
+    <nav role="navigation" id="js-menu" class="sliding-menu-content">
+  <h5>LittleSakana Development <span></span></h5>
+  <ul class="menu-item">
+    <li>
+      <a href="/iOS/">
+        <img src="/images/iOS.png" alt="teaser" class="teaser">
+        <div class="title">iOS</div>
+        <p class="excerpt">iOS开发学习</p>
+      </a>
+    </li><li>
+      <a href="/Git/">
+        <img src="/images/git.png" alt="teaser" class="teaser">
+        <div class="title">Git</div>
+        <p class="excerpt">Git使用学习</p>
+      </a>
+    </li><li>
+      <a href="/JavaScript/">
+        <img src="/images/JavaScript.png" alt="teaser" class="teaser">
+        <div class="title">JavaScript</div>
+        <p class="excerpt">JavaScript开发学习</p>
+      </a>
+    </li><li>
+      <a href="/about/">
+        
+        <div class="title">About</div>
+        <p class="excerpt">All about Littlesakana</p>
+      </a>
+    </li>
+  </ul>
+</nav>
+<button type="button" id="js-menu-trigger" class="sliding-menu-button lines-button x2" role="button" aria-label="Toggle Navigation">
+  <span class="nav-lines"></span>
+</button>
+
+<div id="js-menu-screen" class="menu-screen"></div>
+
+
+    <div id="page-wrapper">
+      <div id="main" role="main">
+	<article class="wrap" itemscope itemtype="http://schema.org/Article">
+		
+		
+  <nav class="breadcrumbs">
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="" itemprop="url">
+        <span itemprop="title">Home</span>
+      </a> › 
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="/git/" itemprop="url">
+        <span itemprop="title">Git</span>
+      </a>
+    </span>
+  </nav><!-- /.breadcrumbs -->
+
+		<div class="page-title">
+			<h1>常用基础命令合集</h1>
+		</div>
+		<div class="inner-wrap">
+			<div id="content" class="page-content" itemprop="articleBody">
+				<p>所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化。</p>
+
+<p>不幸的是，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的。</p>
+
+<h3 id="git-">Git 常用基础命令合集</h3>
+
+<h5 id="section">创建</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git init 创建空的repository
+git add fileName 添加修改的文件，把文件修改添加到暂存区
+git commit -m '提交的消息' 把暂存区的所有内容提交到当前分支
+</code></pre>
+</div>
+
+<h5 id="section-1">分支</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git branch 查看分支
+git branch branchName 创建分支
+git checkout branchName 切换到branchName分支
+git checkout -b branchName  创建并切换到branchName分支
+git checkout -b branch-name origin/branch-name 在本地创建和远程分支对应的分支
+git merge branchName 把branchName分支合并到当前分支
+git branch -d branchName 删除branchName分支，注意不要在branchName分支上做这个操作
+git branch --set-upstream branch-name origin/branch-name 建立本地分支和远程分支的关联
+
+git branch -D branchName 强制删除本地分支
+git push origin :branchName 删除远程分支
+git push origin --delete branchName 删除远程分支(Git1.7.0可用)
+</code></pre>
+</div>
+
+<h5 id="section-2">查看修改</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git status 查看当前状态，有哪些改动
+git diff fileName 查看文件修改的内容
+git diff HEAD -- fileName 查看文件fileName工作区和版本库最新版本的区别
+git diff commitId1 commitId2 查看两次提交的区别
+git diff commitId1:fileName commitId2:fileName 查看两次提交的文件的区别
+</code></pre>
+</div>
+
+<h5 id="section-3">撤销修改</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git reset --mixed 
+git reset --hard commit_id 回滚到commit_id的commit
+git checkout -- fileName 撤销fileName文件在工作区的修改，注意--不要丢掉，回到添加到暂存区后的状态
+git reset HEAD fileName 把暂存区的fileName的修改撤销掉
+</code></pre>
+</div>
+
+<h5 id="section-4">查看提交历史</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git log 查看提交历史
+git log --pretty=oneline 查看log，一行一行地显示
+git reflog 查看git操作记录
+</code></pre>
+</div>
+
+<h5 id="ssh-key">创建ssh key</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssh-keygen -t rsa -C "youremail@example.com" //生成一对公钥id_rsa.pub 私钥id_rsa
+cat ~/.ssh/id_rsa.pub //查看生成的公钥
+</code></pre>
+</div>
+
+<h5 id="section-5">远程仓库</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快
+git remote add origin remoteUrl 远程建了一个空仓库，连接本地到远程(remoteUrl是远程仓库的地址)
+git push origin master 把本地分支master 推送到远程
+git clone remoteUrl 克隆一个远程已存在的仓库到本地(remoteUrl是远程仓库的地址)
+</code></pre>
+</div>
+
+<h5 id="section-6">标签管理</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git tag tagName 为当前分支打名字为tagName的标签，默认标签是打在最新提交的commit上
+git tag tagName commit_id 在commit_id上打tag，适用于忘记打tag的情况
+git tag -a tagName -m "blablabla..." 打标签指定标签信息
+git show tagName 查看tag的说明
+git tag -d tagName 删除本地标签tagName
+git push origin tagName 把标签推送到远程
+git push origin --tags 推送所有标签到远程
+git push origin :refs/tags/tagName 删除远程的标签tagName
+git tag --list 查看所有tag
+git checkout -b tagBranch tagName 检出tag代码
+
+</code></pre>
+</div>
+
+<h3 id="git--1">Git 命令进阶</h3>
+
+<h5 id="message">修改提交message</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Commit has not been pushed online
+git commit --amend
+
+#Amending the message of the most recently pushed commit
+git commit --amend
+git push --force &lt;branch&gt;
+</code></pre>
+</div>
+
+<h5 id="git-rebase">Git rebase</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#rebase 远程分支
+git fetch
+git rebase origin
+处理conflicts
+git add .
+git rebase --continue
+git push origin master
+
+#rebase 本地分支
+git rebase branchName
+处理conflicts
+git add .
+git rebase --continue
+git push origin master
+</code></pre>
+</div>
+
+<h5 id="section-7">多行注释</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git commit -m '
+1.one
+2.two
+'
+</code></pre>
+</div>
+
+<h5 id="section-8">查看本地分支跟踪的远程分支</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git branch -vv
+</code></pre>
+</div>
+
+<h5 id="section-9">切换跟踪的分支</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git remote rm origin
+git remote add origin git@git.nonobank.com:lejiangkai/MXD.git
+git push -u origin feature5.5.4
+</code></pre>
+</div>
+
+<h5 id="stash">stash用法</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git stash
+git stash pop
+git list
+git stash apply stash@{3}
+</code></pre>
+</div>
+
+<h5 id="section-10">合并某个分支的单个文件</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git checkout targetbranch
+git checkout needMergeBranch -- needMergeFileName
+
+如： 分支test上有一个文件A，你在test1分支上， 此时如果想用test分支上的A文件替换test1分支上的文件的话，可以使用
+git checkout test1
+然后
+git checkout test -- A
+</code></pre>
+</div>
+
+				<hr />
+				<footer class="page-footer">
+					
+
+<div class="author-image">
+	<img src="/images/bio-photo.jpg" alt="Kevin">
+</div><!-- ./author-image -->
+<div class="author-content">
+	<h3 class="author-name" > <a href="http://overStackFlow.com" itemprop="author">Kevin</a></h3>
+	<p class="author-bio">Time traveling designer.</p>
+</div><!-- ./author-content -->
+					
+					<div class="page-meta">
+	<p> <time datetime="2015-06-08T00:00:00Z" itemprop="datePublished">June 08, 2015</time></p>
+</div><!-- /.page-meta -->
+				</footer><!-- /.footer -->
+				<aside>
+					
+				</aside>
+			</div><!-- /.content -->
+		</div><!-- /.inner-wrap -->
+	</article><!-- ./wrap -->
+</div><!-- /#main -->
+
+      <footer role="contentinfo" id="site-footer">
+	<nav role="navigation" class="menu bottom-menu">
+		<ul class="menu-item">
+		
+		</ul>
+	</nav><!-- /.bottom-menu -->
+	<p class="copyright">&#169; 2016 <a href="">LittleSakana Development</a> powered by <a href="http://jekyllrb.com">Jekyll</a> + <a href="http://mmistakes.github.io/skinny-bones-jekyll/">Skinny Bones</a>.</p>
+</footer>
+    </div>
+
+    <script src="/js/vendor/jquery-1.9.1.min.js"></script>
+    <script src="/js/main.js"></script>
+
+  </body>
+
+</html>
