@@ -34,11 +34,11 @@ gems:
 
 # Site owner
 owner:
-  name: "Kevin"
-  web: "http://overStackFlow.com"
+  name: "LittleSakana"
+  web: "http://www.overFlowStack.com"
   twitter: "Littlesakana"
-  bio: "Time traveling designer."
-  avatar: "bio-photo.jpg" # 160x160 px image for author byline
+  bio: "既然目标是地平线，留给世界的只能是背影"
+  avatar: "profile.jpeg" # 160x160 px image for author byline
   #google:
     #plus: "+MichaelRoseDesign"
     #ad-client: "ca-pub-7328585512091257"
