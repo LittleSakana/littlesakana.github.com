@@ -35,7 +35,7 @@ gems:
 # Site owner
 owner:
   name: "LittleSakana"
-  web: "http://www.overFlowStack.com"
+  web: "http://www.overFlowStack.com/about"
   twitter: "Littlesakana"
   bio: "既然目标是地平线，留给世界的只能是背影"
   avatar: "profile.jpeg" # 160x160 px image for author byline
