@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>/javascript/JavaScriptMemo3/</loc>
+<lastmod>2016-11-12T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>/javascript/JavaScriptMemo2/</loc>
+<lastmod>2016-11-05T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>/javascript/JavaScriptMemo/</loc>
+<lastmod>2016-10-29T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>/ios/ATS&https/</loc>
 <lastmod>2016-10-04T00:00:00+08:00</lastmod>
 </url>
@@ -19,14 +31,6 @@
 <url>
 <loc>/ios/iOSDevelopTips/</loc>
 <lastmod>2014-08-05T00:00:00+08:00</lastmod>
-</url>
-<url>
-<loc>/javascript/another-sample-media-page/</loc>
-<lastmod>2014-05-10T00:00:00+08:00</lastmod>
-</url>
-<url>
-<loc>/javascript/sample-media-page/</loc>
-<lastmod>2014-02-03T00:00:00+08:00</lastmod>
 </url>
 <url>
 <loc>/git/%25E5%25A4%259A%25E4%25B8%25AAgit%25E8%25B4%25A6%25E5%258F%25B7%25E9%2585%258D%25E7%25BD%25AE/</loc>

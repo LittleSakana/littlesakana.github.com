@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>JavaScript Memo (二) • LittleSakana Development</title>
+    <meta name="description" content="基本语法中的条件判断和循环">
+    <meta name="keywords" content="">
+    
+    	<!-- Twitter Cards -->
+	<meta name="twitter:title" content="JavaScript Memo (二)">
+	<meta name="twitter:description" content="基本语法中的条件判断和循环">
+	<meta name="twitter:site" content="@Littlesakana">
+	<meta name="twitter:creator" content="@Littlesakana">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:image" content="/images/120x120.gif">
+	
+	<!-- Open Graph -->
+	<meta property="og:locale" content="en_CN">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="JavaScript Memo (二)">
+	<meta property="og:description" content="基本语法中的条件判断和循环">
+	<meta property="og:url" content="/javascript/JavaScriptMemo2/">
+	<meta property="og:site_name" content="LittleSakana Development">
+
+    <link rel="canonical" href="/javascript/JavaScriptMemo2/">
+
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="LittleSakana Development Atom Feed">
+    <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- HTML5 Shiv and Media Query Support for IE -->
+    <!--[if lt IE 9]>
+      <script src="/js/vendor/html5shiv.min.js"></script>
+      <script src="/js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body id="js-body">
+    <!--[if lt IE 9]><div class="upgrade notice-warning"><strong>Your browser is quite old!</strong> Why not <a href="http://whatbrowser.org/">upgrade to a newer one</a> to better enjoy this site?</div><![endif]-->
+
+    <header id="masthead">
+  <div class="inner-wrap">
+    <a href="/" class="site-title">LittleSakana Development</a>
+    <nav role="navigation" class="menu top-menu">
+        <ul class="menu-item">
+	<li class="home"><a href="/">LittleSakana Development</a></li>
+	
+    
+    <li><a href="/iOS/" >iOS</a></li>
+  
+    
+    <li><a href="/Git/" >Git</a></li>
+  
+    
+    <li><a href="/JavaScript/" >JavaScript</a></li>
+  
+    
+    <li><a href="/about/" >About</a></li>
+  
+</ul>
+    </nav>
+  </div><!-- /.inner-wrap -->
+</header><!-- /.masthead -->
+    <nav role="navigation" id="js-menu" class="sliding-menu-content">
+  <h5>LittleSakana Development <span></span></h5>
+  <ul class="menu-item">
+    <li>
+      <a href="/iOS/">
+        <img src="/images/iOS.png" alt="teaser" class="teaser">
+        <div class="title">iOS</div>
+        <p class="excerpt">iOS开发学习</p>
+      </a>
+    </li><li>
+      <a href="/Git/">
+        <img src="/images/git.png" alt="teaser" class="teaser">
+        <div class="title">Git</div>
+        <p class="excerpt">Git使用学习</p>
+      </a>
+    </li><li>
+      <a href="/JavaScript/">
+        <img src="/images/JavaScript.png" alt="teaser" class="teaser">
+        <div class="title">JavaScript</div>
+        <p class="excerpt">JavaScript开发学习</p>
+      </a>
+    </li><li>
+      <a href="/about/">
+        
+        <div class="title">About</div>
+        <p class="excerpt">All about Littlesakana</p>
+      </a>
+    </li>
+  </ul>
+</nav>
+<button type="button" id="js-menu-trigger" class="sliding-menu-button lines-button x2" role="button" aria-label="Toggle Navigation">
+  <span class="nav-lines"></span>
+</button>
+
+<div id="js-menu-screen" class="menu-screen"></div>
+
+
+    <div id="page-wrapper">
+      <div id="main" role="main">
+	<article class="wrap" itemscope itemtype="http://schema.org/Article">
+		
+		
+  <nav class="breadcrumbs">
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="" itemprop="url">
+        <span itemprop="title">Home</span>
+      </a> › 
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="/javaScript/" itemprop="url">
+        <span itemprop="title">Javascript</span>
+      </a>
+    </span>
+  </nav><!-- /.breadcrumbs -->
+
+		<div class="page-title">
+			<h1>JavaScript Memo (二)</h1>
+		</div>
+		<div class="inner-wrap">
+			<div id="content" class="page-content" itemprop="articleBody">
+				<blockquote>
+  <p>基本语法中的条件判断和循环。</p>
+</blockquote>
+
+<h3 id="if-else">条件判断if-else</h3>
+
+<blockquote>
+  <p>不解释，只有一点注意，JavaScript把null、undefined、0、NaN和空字符串’‘视为false，其他值一概视为true</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var age = 3;
+if (age &gt;= 18) {
+    alert('adult');
+} else if (age &gt;= 6) {
+    alert('teenager');
+} else {
+    alert('kid');
+}
+</code></pre>
+</div>
+
+<h3 id="for">for循环</h3>
+
+<blockquote>
+  <p>for循环最常用的地方是利用索引来遍历数组</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var arr = ['Apple', 'Google', 'Microsoft'];
+var i, x;
+for (i=0; i&lt;arr.length; i++) {
+    x = arr[i];
+    alert(x);
+}
+</code></pre>
+</div>
+<blockquote>
+  <p>for循环的一个变体是for … in循环，它可以把一个对象的所有属性依次循环出来</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var o = {
+    name: 'Jack',
+    age: 20,
+    city: 'Beijing'
+};
+for (var key in o) {
+    alert(key); // 'name', 'age', 'city'
+}
+</code></pre>
+</div>
+
+<h3 id="for--in">for … in</h3>
+
+<blockquote>
+  <p>for … in循环由于历史遗留问题，它遍历的实际上是对象的属性名称,一个Array数组实际上也是一个对象，它的每个元素的索引被视为一个属性</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var a = ['A', 'B', 'C'];
+a.name = 'Hello';
+for (var x in a) {
+    alert(x); // '0', '1', '2', 'name'
+}
+</code></pre>
+</div>
+
+<h3 id="for--of">for … of</h3>
+
+<blockquote>
+  <p>遍历Array可以采用下标循环，遍历Map和Set就无法使用下标。为了统一集合类型，ES6标准引入了新的iterable类型，Array、Map和Set都属于iterable类型</p>
+
+  <p>具有iterable类型的集合可以通过新的for … of循环来遍历</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var a = ['A', 'B', 'C'];
+var s = new Set(['A', 'B', 'C']);
+var m = new Map([[1, 'x'], [2, 'y'], [3, 'z']]);
+for (var x of a) { // 遍历Array
+    alert(x);// 'A', 'B', 'C'
+}
+for (var x of s) { // 遍历Set
+    alert(x);
+}
+for (var x of m) { // 遍历Map
+    alert(x[0] + '=' + x[1]);
+}
+</code></pre>
+</div>
+
+<h3 id="foreach">forEach()</h3>
+
+<blockquote>
+  <p>ES5.1标准引入forEach()方法</p>
+
+  <p>它接收一个函数，每次迭代就自动回调该函数</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var a = ['A', 'B', 'C'];
+a.forEach(function (element, index, array) {
+    // element: 指向当前元素的值
+    // index: 指向当前索引
+    // array: 指向Array对象本身
+    alert(element);
+});
+
+var s = new Set(['A', 'B', 'C']);
+s.forEach(function (element, sameElement, set) {
+    alert(element);
+});
+
+var m = new Map([[1, 'x'], [2, 'y'], [3, 'z']]);
+m.forEach(function (value, key, map) {
+    alert(value);
+});
+</code></pre>
+</div>
+
+				<hr />
+				<footer class="page-footer">
+					
+
+<div class="author-image">
+	<img src="/images/bio-photo.jpg" alt="Kevin">
+</div><!-- ./author-image -->
+<div class="author-content">
+	<h3 class="author-name" > <a href="http://overStackFlow.com" itemprop="author">Kevin</a></h3>
+	<p class="author-bio">Time traveling designer.</p>
+</div><!-- ./author-content -->
+					
+					<div class="page-meta">
+	<p> <time datetime="2016-11-05T00:00:00Z" itemprop="datePublished">November 05, 2016</time></p>
+</div><!-- /.page-meta -->
+				</footer><!-- /.footer -->
+				<aside>
+					
+				</aside>
+			</div><!-- /.content -->
+		</div><!-- /.inner-wrap -->
+	</article><!-- ./wrap -->
+</div><!-- /#main -->
+
+      <footer role="contentinfo" id="site-footer">
+	<nav role="navigation" class="menu bottom-menu">
+		<ul class="menu-item">
+		
+		</ul>
+	</nav><!-- /.bottom-menu -->
+	<p class="copyright">&#169; 2016 <a href="">LittleSakana Development</a> powered by <a href="http://jekyllrb.com">Jekyll</a> + <a href="http://mmistakes.github.io/skinny-bones-jekyll/">Skinny Bones</a>.</p>
+</footer>
+    </div>
+
+    <script src="/js/vendor/jquery-1.9.1.min.js"></script>
+    <script src="/js/main.js"></script>
+
+  </body>
+
+</html>
