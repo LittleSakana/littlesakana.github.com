@@ -43,7 +43,10 @@ owner:
     #plus: "+MichaelRoseDesign"
     #ad-client: "ca-pub-7328585512091257"
     #ad-slot: 3049671934
-  disqus-shortname:
+  comments :
+  provider : duoshuo
+  duoshuo :
+    short_name : overflowstack
 
 
 include:
