@@ -194,3 +194,19 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
 >原因：AppStore有缓存，导致即使不是最新版app也显示”打开“，不显示”更新“
 >
 >解决方法：杀死AppStore，重新打开即可
+
+#### 把定时器加到runloop
+
+```
+[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+```
+
+#### 定时器更新按钮title闪烁的问题
+
+把按钮设置成custom，不要用system，然后用下面的方法
+
+```
+[UIView setAnimationsEnabled:NO];
+[self.btnGetCode setTitle:[NSString stringWithFormat:@"%ds",second] forState:UIControlStateNormal];
+[UIView setAnimationsEnabled:YES];
+```
