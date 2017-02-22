@@ -15,6 +15,11 @@
   excerpt: "JavaScript开发学习"
   image: JavaScript.png
 
+- title: Other
+  url: /Other/
+  excerpt: "其他"
+  #image: JavaScript.png
+
 - title: About
   url: /about/
   excerpt: "All about Littlesakana"
