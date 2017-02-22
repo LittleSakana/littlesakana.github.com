@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>/other/%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258F/</loc>
+<lastmod>2017-02-07T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>/ios/%25E4%25BB%25A3%25E7%25A0%2581%25E6%25A3%2580%25E6%259F%25A5%25E5%25B7%25A5%25E5%2585%25B7infer/</loc>
+<lastmod>2017-01-10T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>/javascript/JavaScriptMemo3/</loc>
 <lastmod>2016-11-12T00:00:00+08:00</lastmod>
 </url>
@@ -46,9 +54,12 @@
 <loc>/Git/</loc>
 </url>
 <url>
-<loc>/JavaScript/</loc>
+<loc>/iOS/</loc>
 </url>
 <url>
-<loc>/iOS/</loc>
+<loc>/Other/</loc>
+</url>
+<url>
+<loc>/JavaScript/</loc>
 </url>
 </urlset>

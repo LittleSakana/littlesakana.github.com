@@ -62,6 +62,9 @@
     <li><a href="/JavaScript/" >JavaScript</a></li>
   
     
+    <li><a href="/other/" >Other</a></li>
+  
+    
     <li><a href="/about/" >About</a></li>
   
 </ul>
@@ -88,6 +91,12 @@
         <img src="/images/JavaScript.png" alt="teaser" class="teaser">
         <div class="title">JavaScript</div>
         <p class="excerpt">JavaScript开发学习</p>
+      </a>
+    </li><li>
+      <a href="/other/">
+        
+        <div class="title">Other</div>
+        <p class="excerpt">其他</p>
       </a>
     </li><li>
       <a href="/about/">
@@ -321,6 +330,22 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
 
   <p>解决方法：杀死AppStore，重新打开即可</p>
 </blockquote>
+
+<h4 id="runloop">把定时器加到runloop</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+</code></pre>
+</div>
+
+<h4 id="title">定时器更新按钮title闪烁的问题</h4>
+
+<p>把按钮设置成custom，不要用system，然后用下面的方法</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[UIView setAnimationsEnabled:NO];
+[self.btnGetCode setTitle:[NSString stringWithFormat:@"%ds",second] forState:UIControlStateNormal];
+[UIView setAnimationsEnabled:YES];
+</code></pre>
+</div>
 
 				<hr />
 				<footer class="page-footer">

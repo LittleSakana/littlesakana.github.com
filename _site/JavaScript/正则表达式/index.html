@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>正则表达式 • LittleSakana Development</title>
+    <meta name="description" content="正则表达式(regular expression)描述了一种字符串匹配的模式">
+    <meta name="keywords" content="">
+    
+    	<!-- Twitter Cards -->
+	<meta name="twitter:title" content="正则表达式">
+	<meta name="twitter:description" content="正则表达式(regular expression)描述了一种字符串匹配的模式">
+	<meta name="twitter:site" content="@Littlesakana">
+	<meta name="twitter:creator" content="@Littlesakana">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:image" content="/images/120x120.gif">
+	
+	<!-- Open Graph -->
+	<meta property="og:locale" content="en_CN">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="正则表达式">
+	<meta property="og:description" content="正则表达式(regular expression)描述了一种字符串匹配的模式">
+	<meta property="og:url" content="/javascript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+	<meta property="og:site_name" content="LittleSakana Development">
+
+    <link rel="canonical" href="/javascript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="LittleSakana Development Atom Feed">
+    <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- HTML5 Shiv and Media Query Support for IE -->
+    <!--[if lt IE 9]>
+      <script src="/js/vendor/html5shiv.min.js"></script>
+      <script src="/js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body id="js-body">
+    <!--[if lt IE 9]><div class="upgrade notice-warning"><strong>Your browser is quite old!</strong> Why not <a href="http://whatbrowser.org/">upgrade to a newer one</a> to better enjoy this site?</div><![endif]-->
+
+    <header id="masthead">
+  <div class="inner-wrap">
+    <a href="/" class="site-title">LittleSakana Development</a>
+    <nav role="navigation" class="menu top-menu">
+        <ul class="menu-item">
+	<li class="home"><a href="/">LittleSakana Development</a></li>
+	
+    
+    <li><a href="/iOS/" >iOS</a></li>
+  
+    
+    <li><a href="/Git/" >Git</a></li>
+  
+    
+    <li><a href="/JavaScript/" >JavaScript</a></li>
+  
+    
+    <li><a href="/other/" >Other</a></li>
+  
+    
+    <li><a href="/about/" >About</a></li>
+  
+</ul>
+    </nav>
+  </div><!-- /.inner-wrap -->
+</header><!-- /.masthead -->
+    <nav role="navigation" id="js-menu" class="sliding-menu-content">
+  <h5>LittleSakana Development <span></span></h5>
+  <ul class="menu-item">
+    <li>
+      <a href="/iOS/">
+        <img src="/images/iOS.png" alt="teaser" class="teaser">
+        <div class="title">iOS</div>
+        <p class="excerpt">iOS开发学习</p>
+      </a>
+    </li><li>
+      <a href="/Git/">
+        <img src="/images/git.png" alt="teaser" class="teaser">
+        <div class="title">Git</div>
+        <p class="excerpt">Git使用学习</p>
+      </a>
+    </li><li>
+      <a href="/JavaScript/">
+        <img src="/images/JavaScript.png" alt="teaser" class="teaser">
+        <div class="title">JavaScript</div>
+        <p class="excerpt">JavaScript开发学习</p>
+      </a>
+    </li><li>
+      <a href="/other/">
+        
+        <div class="title">Other</div>
+        <p class="excerpt">其他</p>
+      </a>
+    </li><li>
+      <a href="/about/">
+        
+        <div class="title">About</div>
+        <p class="excerpt">All about Littlesakana</p>
+      </a>
+    </li>
+  </ul>
+</nav>
+<button type="button" id="js-menu-trigger" class="sliding-menu-button lines-button x2" role="button" aria-label="Toggle Navigation">
+  <span class="nav-lines"></span>
+</button>
+
+<div id="js-menu-screen" class="menu-screen"></div>
+
+
+    <div id="page-wrapper">
+      <div id="main" role="main">
+	<article class="wrap" itemscope itemtype="http://schema.org/Article">
+		
+		
+  <nav class="breadcrumbs">
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="" itemprop="url">
+        <span itemprop="title">Home</span>
+      </a> › 
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="/javaScript/" itemprop="url">
+        <span itemprop="title">Javascript</span>
+      </a>
+    </span>
+  </nav><!-- /.breadcrumbs -->
+
+		<div class="page-title">
+			<h1>正则表达式</h1>
+		</div>
+		<div class="inner-wrap">
+			<div id="content" class="page-content" itemprop="articleBody">
+				<h2 id="section">简介</h2>
+
+<p>正则表达式(regular expression)描述了一种字符串匹配的模式，可以用来检查一个串是否含有某种子串、将匹配的子串做替换或者从某个串中取出符合某个条件的子串等。</p>
+
+<h2 id="section-1">语法</h2>
+
+<p>正则表达式是由普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符”）组成的文字模式。</p>
+
+<h4 id="section-2">非打印字符</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">\cx</code> 匹配Control-x</li>
+  <li><code class="highlighter-rouge">\f</code> 匹配一个分页符</li>
+  <li><code class="highlighter-rouge">\r</code> 匹配一个回车Return</li>
+  <li><code class="highlighter-rouge">\n</code> 匹配一个换行</li>
+  <li><code class="highlighter-rouge">\t</code> 匹配一个制表符tab</li>
+  <li><code class="highlighter-rouge">\v</code> 匹配一个垂直制表符</li>
+  <li><code class="highlighter-rouge">\s</code> 匹配任何空白字符，包括空格、换行、制表符、分页，等价于 <code class="highlighter-rouge">[\r\n\f\v\t]</code></li>
+  <li><code class="highlighter-rouge">\S</code> 匹配任何非空白符，等价于<code class="highlighter-rouge">[^\r\n\f\v\t]</code></li>
+</ul>
+
+<h4 id="section-3">特殊字符</h4>
+
+<p><strong>特殊字符具有特殊含义，若要使用这些字符的普通字符，需要进行转义，如要匹配 <code class="highlighter-rouge">$</code> 符号，需要使用 <code class="highlighter-rouge">\$</code></strong></p>
+
+<ul>
+  <li><code class="highlighter-rouge">$</code> 匹配输入字符串的结尾位置</li>
+  <li><code class="highlighter-rouge">()</code> 标记一个子表达式的开始和结束位置</li>
+  <li><code class="highlighter-rouge">*</code> 匹配前面的子表达式0次或多次</li>
+  <li><code class="highlighter-rouge">+</code> 匹配前面的子表达式1次或多次</li>
+  <li><code class="highlighter-rouge">.</code> 匹配除换行符<code class="highlighter-rouge">\n</code>之外的任何字符</li>
+  <li><code class="highlighter-rouge">[</code> 标记一个中括号表达式的开始</li>
+  <li><code class="highlighter-rouge">?</code> 匹配前面的子表达式0次或1次</li>
+  <li><code class="highlighter-rouge">\</code> 转义字符</li>
+  <li><code class="highlighter-rouge">^</code> 匹配输入字符串的开始位置，<strong>在中括号内使用时表示非，即不包含中括号内的任何字符</strong></li>
+  <li><code class="highlighter-rouge"><span class="p">{</span></code> 标记限定表达式的开始</li>
+  <li><code class="highlighter-rouge">|</code> 指明两项之间的一个选择</li>
+</ul>
+
+<h4 id="section-4">限定符</h4>
+
+<p>限定符用来指定正则表达式的一个给定组件必须要出现多少次才能满足匹配</p>
+
+<ul>
+  <li><code class="highlighter-rouge">*</code> 0次或多次，等价于 <code class="highlighter-rouge"><span class="p">{</span><span class="err">0,</span><span class="p">}</span></code></li>
+  <li><code class="highlighter-rouge">+</code> 1次或多次,等价于 <code class="highlighter-rouge"><span class="p">{</span><span class="err">1,</span><span class="p">}</span></code></li>
+  <li><code class="highlighter-rouge">?</code> 0次或1次,等价于 <code class="highlighter-rouge"><span class="p">{</span><span class="err">0,1</span><span class="p">}</span></code></li>
+  <li><code class="highlighter-rouge"><span class="p">{</span><span class="err">n</span><span class="p">}</span></code> n次</li>
+  <li><code class="highlighter-rouge"><span class="p">{</span><span class="err">n,</span><span class="p">}</span></code> 大于等于n次</li>
+  <li><code class="highlighter-rouge"><span class="p">{</span><span class="err">n,m</span><span class="p">}</span></code> 大于等于n次，且小于等于m次，<strong>此表达式不能有空格</strong></li>
+</ul>
+
+<h4 id="section-5">定位符</h4>
+
+<p>定位符用来描述字符串或单词的边界，^和$分别指字符串的开始与结束，\b描述单词的前或后边界，\B表示非单词边界</p>
+
+<ul>
+  <li><code class="highlighter-rouge">^</code> 匹配输入字符串开始的位置</li>
+  <li><code class="highlighter-rouge">$</code> 匹配输入字符串结束的位置</li>
+  <li><code class="highlighter-rouge">\b</code> 匹配一个字边界，字与空格之间的位置</li>
+  <li><code class="highlighter-rouge">\B</code> 匹配非字边界</li>
+</ul>
+
+<p><strong>注意：</strong> 不能把限定符与定位符一起使用</p>
+
+<h2 id="section-6">运算符优先级</h2>
+
+<p>转移符<code class="highlighter-rouge">\</code> &gt; 圆括号和方括号 <code class="highlighter-rouge">(), (?:), (?=), []</code> &gt; 限定符 <code class="highlighter-rouge">*, +, ?, {n}, {n,}, {n,m}</code> &gt; 定位点和序列 <code class="highlighter-rouge">^, $, \任何元字符、任何字符</code> &gt; 替换，或 <code class="highlighter-rouge">|</code></p>
+
+<h2 id="section-7">简单示例</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">^haha</code> 以haha开头</li>
+  <li><code class="highlighter-rouge">haha$</code> 以haha结尾</li>
+  <li><code class="highlighter-rouge">^haha$</code> 匹配haha字符串</li>
+  <li><code class="highlighter-rouge">haha</code> 匹配任何包含haha的字符串</li>
+  <li><code class="highlighter-rouge">[A-Za-z0-9@_]</code> 字母数字@_字符集中的一个</li>
+  <li><code class="highlighter-rouge">^[a-z][0-9]$</code> 小写字母开头第二位是数字的两位字符串</li>
+  <li><code class="highlighter-rouge">[^a-z]</code> 除小写字母以外的字符串</li>
+  <li><code class="highlighter-rouge">^a{4}$</code> aaaa</li>
+  <li><code class="highlighter-rouge">^a{2,4}$</code> aa或aaa或aaaa</li>
+  <li><code class="highlighter-rouge">^[1-9][0-9]*$</code> 所有的正整数</li>
+  <li><code class="highlighter-rouge">^\-{0,1}[0-9]{1,}$</code> 所有的整数</li>
+  <li><code class="highlighter-rouge">^\-?[0-9]{1,}\.?[0-9]{1,}$</code> 所有的浮点数</li>
+  <li><code class="highlighter-rouge">^(A|B)</code> 以A或B开头，但是会保存，按照第一次来匹配</li>
+  <li><code class="highlighter-rouge">^(?:A|B)</code> 以A或B开头,不会保存</li>
+  <li><code class="highlighter-rouge">/(\w+):\/\/([^/:]+)(:\d*)?([^# ]*)/</code> 将一个URL解析为协议、域、端口及相对路径</li>
+  <li><code class="highlighter-rouge">/&lt;\s*(\S+)(\s[^&gt;]*)?&gt;[\s\S]*&lt;\s*\/\1\s*&gt;/</code> 匹配 HTML 标记</li>
+</ul>
+
+				<hr />
+				<footer class="page-footer">
+					
+
+<div class="author-image">
+	<img src="/images/profile.jpeg" alt="LittleSakana">
+</div><!-- ./author-image -->
+<div class="author-content">
+	<h3 class="author-name" > <a href="http://www.overFlowStack.com/about" itemprop="author">LittleSakana</a></h3>
+	<p class="author-bio">既然目标是地平线，留给世界的只能是背影</p>
+</div><!-- ./author-content -->
+					
+					<div class="page-meta">
+	<p> <time datetime="2017-02-07T00:00:00Z" itemprop="datePublished">February 07, 2017</time></p>
+</div><!-- /.page-meta -->
+				</footer><!-- /.footer -->
+				<aside>
+					
+				</aside>
+			</div><!-- /.content -->
+		</div><!-- /.inner-wrap -->
+	</article><!-- ./wrap -->
+</div><!-- /#main -->
+
+<!--<!-- 多说评论框 start -->
+<!--	<div class="ds-thread" data-thread-key="1111" data-title={ page.title } data-url={ page.url }></div>
+<!--<!-- 多说评论框 end -->
+<!--<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<!--<script type="text/javascript">
+<!--var duoshuoQuery = {short_name:"overflowstack"};
+<!--	(function() {
+<!--		var ds = document.createElement('script');
+<!--		ds.type = 'text/javascript';ds.async = true;
+<!--		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+<!--		ds.charset = 'UTF-8';
+<!--		(document.getElementsByTagName('head')[0] 
+<!--		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+<!--	})();
+<!--	</script>
+<!--<!-- 多说公共JS代码 end -->
+
+      <footer role="contentinfo" id="site-footer">
+	<nav role="navigation" class="menu bottom-menu">
+		<ul class="menu-item">
+		
+		</ul>
+	</nav><!-- /.bottom-menu -->
+	<p class="copyright">&#169; 2017 <a href="">LittleSakana Development</a> powered by <a href="http://jekyllrb.com">Jekyll</a> + <a href="http://mmistakes.github.io/skinny-bones-jekyll/">Skinny Bones</a>.</p>
+</footer>
+    </div>
+
+    <script src="/js/vendor/jquery-1.9.1.min.js"></script>
+    <script src="/js/main.js"></script>
+
+  </body>
+
+</html>

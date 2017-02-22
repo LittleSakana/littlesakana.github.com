@@ -1,4 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.6">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2017-01-04T16:15:05+08:00</updated><id>/</id><title>LittleSakana Development</title><subtitle>开发学习过程笔记及开发经验积累，以供参考</subtitle><entry><title>JavaScript Memo (三)</title><link href="/javascript/JavaScriptMemo3/" rel="alternate" type="text/html" title="JavaScript Memo (三)" /><published>2016-11-12T00:00:00+08:00</published><updated>2016-11-12T00:00:00+08:00</updated><id>/javascript/JavaScriptMemo3</id><content type="html" xml:base="/javascript/JavaScriptMemo3/">&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.6">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2017-02-22T13:45:05+08:00</updated><id>/</id><title>LittleSakana Development</title><subtitle>开发学习过程笔记及开发经验积累，以供参考</subtitle><entry><title>正则表达式</title><link href="/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="alternate" type="text/html" title="正则表达式" /><published>2017-02-07T00:00:00+08:00</published><updated>2017-02-07T00:00:00+08:00</updated><id>/other/正则表达式</id><content type="html" xml:base="/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">&lt;h2 id=&quot;section&quot;&gt;简介&lt;/h2&gt;
+
+&lt;p&gt;正则表达式(regular expression)描述了一种字符串匹配的模式，可以用来检查一个串是否含有某种子串、将匹配的子串做替换或者从某个串中取出符合某个条件的子串等。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;语法&lt;/h2&gt;
+
+&lt;p&gt;正则表达式是由普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符”）组成的文字模式。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-2&quot;&gt;非打印字符&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\cx&lt;/code&gt; 匹配Control-x&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\f&lt;/code&gt; 匹配一个分页符&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\r&lt;/code&gt; 匹配一个回车Return&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt; 匹配一个换行&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\t&lt;/code&gt; 匹配一个制表符tab&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\v&lt;/code&gt; 匹配一个垂直制表符&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\s&lt;/code&gt; 匹配任何空白字符，包括空格、换行、制表符、分页，等价于 &lt;code class=&quot;highlighter-rouge&quot;&gt;[\r\n\f\v\t]&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\S&lt;/code&gt; 匹配任何非空白符，等价于&lt;code class=&quot;highlighter-rouge&quot;&gt;[^\r\n\f\v\t]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;section-3&quot;&gt;特殊字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;特殊字符具有特殊含义，若要使用这些字符的普通字符，需要进行转义，如要匹配 &lt;code class=&quot;highlighter-rouge&quot;&gt;$&lt;/code&gt; 符号，需要使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;\$&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$&lt;/code&gt; 匹配输入字符串的结尾位置&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;()&lt;/code&gt; 标记一个子表达式的开始和结束位置&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; 匹配前面的子表达式0次或多次&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;+&lt;/code&gt; 匹配前面的子表达式1次或多次&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt; 匹配除换行符&lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt;之外的任何字符&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[&lt;/code&gt; 标记一个中括号表达式的开始&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;?&lt;/code&gt; 匹配前面的子表达式0次或1次&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\&lt;/code&gt; 转义字符&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^&lt;/code&gt; 匹配输入字符串的开始位置，&lt;strong&gt;在中括号内使用时表示非，即不包含中括号内的任何字符&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;/code&gt; 标记限定表达式的开始&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt; 指明两项之间的一个选择&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;section-4&quot;&gt;限定符&lt;/h4&gt;
+
+&lt;p&gt;限定符用来指定正则表达式的一个给定组件必须要出现多少次才能满足匹配&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; 0次或多次，等价于 &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;0,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;+&lt;/code&gt; 1次或多次,等价于 &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;1,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;?&lt;/code&gt; 0次或1次,等价于 &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;0,1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt; n次&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;n,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt; 大于等于n次&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;n,m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt; 大于等于n次，且小于等于m次，&lt;strong&gt;此表达式不能有空格&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;section-5&quot;&gt;定位符&lt;/h4&gt;
+
+&lt;p&gt;定位符用来描述字符串或单词的边界，^和$分别指字符串的开始与结束，\b描述单词的前或后边界，\B表示非单词边界&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^&lt;/code&gt; 匹配输入字符串开始的位置&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$&lt;/code&gt; 匹配输入字符串结束的位置&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\b&lt;/code&gt; 匹配一个字边界，字与空格之间的位置&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\B&lt;/code&gt; 匹配非字边界&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt; 不能把限定符与定位符一起使用&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;运算符优先级&lt;/h2&gt;
+
+&lt;p&gt;转移符&lt;code class=&quot;highlighter-rouge&quot;&gt;\&lt;/code&gt; &amp;gt; 圆括号和方括号 &lt;code class=&quot;highlighter-rouge&quot;&gt;(), (?:), (?=), []&lt;/code&gt; &amp;gt; 限定符 &lt;code class=&quot;highlighter-rouge&quot;&gt;*, +, ?, {n}, {n,}, {n,m}&lt;/code&gt; &amp;gt; 定位点和序列 &lt;code class=&quot;highlighter-rouge&quot;&gt;^, $, \任何元字符、任何字符&lt;/code&gt; &amp;gt; 替换，或 &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-7&quot;&gt;简单示例&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^haha&lt;/code&gt; 以haha开头&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;haha$&lt;/code&gt; 以haha结尾&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^haha$&lt;/code&gt; 匹配haha字符串&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;haha&lt;/code&gt; 匹配任何包含haha的字符串&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[A-Za-z0-9@_]&lt;/code&gt; 字母数字@_字符集中的一个&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^[a-z][0-9]$&lt;/code&gt; 小写字母开头第二位是数字的两位字符串&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[^a-z]&lt;/code&gt; 除小写字母以外的字符串&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^a{4}$&lt;/code&gt; aaaa&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^a{2,4}$&lt;/code&gt; aa或aaa或aaaa&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^[1-9][0-9]*$&lt;/code&gt; 所有的正整数&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^\-{0,1}[0-9]{1,}$&lt;/code&gt; 所有的整数&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^\-?[0-9]{1,}\.?[0-9]{1,}$&lt;/code&gt; 所有的浮点数&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(A|B)&lt;/code&gt; 以A或B开头，但是会保存，按照第一次来匹配&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?:A|B)&lt;/code&gt; 以A或B开头,不会保存&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/(\w+):\/\/([^/:]+)(:\d*)?([^# ]*)/&lt;/code&gt; 将一个URL解析为协议、域、端口及相对路径&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/&amp;lt;\s*(\S+)(\s[^&amp;gt;]*)?&amp;gt;[\s\S]*&amp;lt;\s*\/\1\s*&amp;gt;/&lt;/code&gt; 匹配 HTML 标记&lt;/li&gt;
+&lt;/ul&gt;</content><summary>正则表达式(regular expression)描述了一种字符串匹配的模式</summary></entry><entry><title>代码检查工具infer</title><link href="/ios/%E4%BB%A3%E7%A0%81%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7infer/" rel="alternate" type="text/html" title="代码检查工具infer" /><published>2017-01-10T00:00:00+08:00</published><updated>2017-01-10T00:00:00+08:00</updated><id>/ios/代码检查工具infer</id><content type="html" xml:base="/ios/%E4%BB%A3%E7%A0%81%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7infer/">&lt;h2 id=&quot;section&quot;&gt;简介&lt;/h2&gt;
+
+&lt;p&gt;Facebook 的 Infer 是一个用OCmal语言写的静态分析工具。Infer 可以分析 Objective-C， Java 或者 C 代码，报告潜在的问题。目前 Infer 着重于发现一些诸如空指针的访问、资源和内存的泄露等导致手机程序崩溃或性能严重下降的问题。Infer 还可发现 iOS 和 C 代码中的内存泄露。&lt;/p&gt;
+
+&lt;h2 id=&quot;bugobjective-c&quot;&gt;报告bug类型参考（Objective-C）&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Resource Leak&lt;/li&gt;
+  &lt;li&gt;Memory leak&lt;/li&gt;
+  &lt;li&gt;Null dereference&lt;/li&gt;
+  &lt;li&gt;Parameter not null checked&lt;/li&gt;
+  &lt;li&gt;Ivar not null checked&lt;/li&gt;
+  &lt;li&gt;Premature nil termination argument&lt;/li&gt;
+  &lt;li&gt;Retain cycle&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;mac&quot;&gt;安装运行(Mac)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install infer
+gem install xcpretty
+
+#运行
+infer -- xcodebuild -target XXX -configuration Release -sdk iphoneos
+
+#非增量模式
+xcodebuild -target HelloWorldApp -configuration Debug -sdk iphonesimulator clean
+
+#查看bug
+inferTraceBugs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content><summary>Facebook 的 Infer 是一个用OCmal语言写的静态分析工具。Infer 可以分析 Objective-C， Java 或者 C 代码，报告潜在的问题</summary></entry><entry><title>JavaScript Memo (三)</title><link href="/javascript/JavaScriptMemo3/" rel="alternate" type="text/html" title="JavaScript Memo (三)" /><published>2016-11-12T00:00:00+08:00</published><updated>2016-11-12T00:00:00+08:00</updated><id>/javascript/JavaScriptMemo3</id><content type="html" xml:base="/javascript/JavaScriptMemo3/">&lt;blockquote&gt;
   &lt;p&gt;现在让我们看看函数和方法。&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1407,46 +1525,20 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
   &lt;p&gt;原因：AppStore有缓存，导致即使不是最新版app也显示”打开“，不显示”更新“&lt;/p&gt;
 
   &lt;p&gt;解决方法：杀死AppStore，重新打开即可&lt;/p&gt;
-&lt;/blockquote&gt;</content><summary>DevelopTips</summary></entry><entry><title>多个git账号配置</title><link href="/git/%E5%A4%9A%E4%B8%AAgit%E8%B4%A6%E5%8F%B7%E9%85%8D%E7%BD%AE/" rel="alternate" type="text/html" title="多个git账号配置" /><published>2014-01-11T00:00:00+08:00</published><updated>2014-01-11T00:00:00+08:00</updated><id>/git/多个git账号配置</id><content type="html" xml:base="/git/%E5%A4%9A%E4%B8%AAgit%E8%B4%A6%E5%8F%B7%E9%85%8D%E7%BD%AE/">&lt;p&gt;一般情况下，一台电脑会连接多个git服务器，比如公司的一台，oschina一台，github一台，三个账号都要用，废话少说，直接上干货。&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;h3 id=&quot;ssh-keygenidrsagithubidrsagithubpub&quot;&gt;1.用ssh-keygen命令生成一组新的id_rsa_github和id_rsa_github.pub&lt;/h3&gt;
+&lt;h4 id=&quot;runloop&quot;&gt;把定时器加到runloop&lt;/h4&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-keygen -t rsa -C &quot;new email&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;平时我们都是直接回车，默认生成id_rsa和id_rsa.pub。这里特别需要注意，出现提示输入文件名的时候要输入与默认配置不一样的文件名，比如：  id_rsa_github&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;sshconfig&quot;&gt;2.配置~/.ssh/config文件&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Host git.oschina.net
-   User Kevin
-   Hostname git.oschina.net 
-   IdentityFile ~/.ssh/id_rsa_oschina
-
-Host github.com
-   User Kevin
-   Hostname github.com 
-   IdentityFile ~/.ssh/id_rsa_github
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;IdentityFile告诉SSH连接去读取哪个私钥&lt;/p&gt;
-
-&lt;h3 id=&quot;ssh-agentssh&quot;&gt;3.执行ssh-agent让ssh识别新的私钥&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-add ~/.ssh/id_rsa_github
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;h3 id=&quot;section&quot;&gt;4.注意事项&lt;/h3&gt;
+&lt;h4 id=&quot;title&quot;&gt;定时器更新按钮title闪烁的问题&lt;/h4&gt;
 
-&lt;p&gt;多个账号同时使用时，要需要设置的全局用户名和用户邮箱，在每个repo目录下单独设置&lt;/p&gt;
+&lt;p&gt;把按钮设置成custom，不要用system，然后用下面的方法&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//取消全局设置
-git config --global --unset user.name 取消全局设置
-git config --global --unset user.email 取消全局设置
-
-//单独设置
-git config user.name &quot;newname&quot;
-git config user.email &quot;newemail&quot;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[UIView setAnimationsEnabled:NO];
+[self.btnGetCode setTitle:[NSString stringWithFormat:@&quot;%ds&quot;,second] forState:UIControlStateNormal];
+[UIView setAnimationsEnabled:YES];
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><summary>一般情况下，一台电脑会连接多个git服务器，比如公司的一台，oschina一台，github一台，三个账号都要用，废话少说，直接上干货</summary></entry></feed>
+&lt;/div&gt;</content><summary>DevelopTips</summary></entry></feed>

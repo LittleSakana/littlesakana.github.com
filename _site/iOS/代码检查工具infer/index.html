@@ -2,13 +2,13 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>2017年开始强制https的问题 • LittleSakana Development</title>
-    <meta name="description" content="2017年开始强制https的问题.">
+    <title>代码检查工具infer • LittleSakana Development</title>
+    <meta name="description" content="Facebook 的 Infer 是一个用OCmal语言写的静态分析工具。Infer 可以分析 Objective-C， Java 或者 C 代码，报告潜在的问题">
     <meta name="keywords" content="">
     
     	<!-- Twitter Cards -->
-	<meta name="twitter:title" content="2017年开始强制https的问题">
-	<meta name="twitter:description" content="2017年开始强制https的问题.">
+	<meta name="twitter:title" content="代码检查工具infer">
+	<meta name="twitter:description" content="Facebook 的 Infer 是一个用OCmal语言写的静态分析工具。Infer 可以分析 Objective-C， Java 或者 C 代码，报告潜在的问题">
 	<meta name="twitter:site" content="@Littlesakana">
 	<meta name="twitter:creator" content="@Littlesakana">
 	
@@ -18,12 +18,12 @@
 	<!-- Open Graph -->
 	<meta property="og:locale" content="en_CN">
 	<meta property="og:type" content="article">
-	<meta property="og:title" content="2017年开始强制https的问题">
-	<meta property="og:description" content="2017年开始强制https的问题.">
-	<meta property="og:url" content="/ios/ATS&https/">
+	<meta property="og:title" content="代码检查工具infer">
+	<meta property="og:description" content="Facebook 的 Infer 是一个用OCmal语言写的静态分析工具。Infer 可以分析 Objective-C， Java 或者 C 代码，报告潜在的问题">
+	<meta property="og:url" content="/ios/%E4%BB%A3%E7%A0%81%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7infer/">
 	<meta property="og:site_name" content="LittleSakana Development">
 
-    <link rel="canonical" href="/ios/ATS&https/">
+    <link rel="canonical" href="/ios/%E4%BB%A3%E7%A0%81%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7infer/">
 
     <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="LittleSakana Development Atom Feed">
     <link href="/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
@@ -132,45 +132,41 @@
   </nav><!-- /.breadcrumbs -->
 
 		<div class="page-title">
-			<h1>2017年开始强制https的问题</h1>
+			<h1>代码检查工具infer</h1>
 		</div>
 		<div class="inner-wrap">
 			<div id="content" class="page-content" itemprop="articleBody">
-				<blockquote>
-  <p>iOS9 中默认非HTTPS的协议是被禁止的，我们为了能正常发起http请求，在info.plist文件中添加AppTransportSecuritySettings字典，将NSAllowsArbitraryLoads设置为YES来禁止ATS。</p>
-</blockquote>
+				<h2 id="section">简介</h2>
 
-<blockquote>
-  <p>iOS10 从2017年1月1日起苹果提出所有新提交的App默认不允许使用NSAllowsArbitraryLoads来绕过ATS的限制，也就是说强制我们用HTTPS，否则我们提交App可能会被拒绝。</p>
-</blockquote>
+<p>Facebook 的 Infer 是一个用OCmal语言写的静态分析工具。Infer 可以分析 Objective-C， Java 或者 C 代码，报告潜在的问题。目前 Infer 着重于发现一些诸如空指针的访问、资源和内存的泄露等导致手机程序崩溃或性能严重下降的问题。Infer 还可发现 iOS 和 C 代码中的内存泄露。</p>
 
-<h4 id="section">解决方案</h4>
-<p>通过NSExceptionDomains设置白名单的方式来针对特定的域名开放HTTP内容来通过审核。可以简单理解成，把不支持https协议的接口添加到白名单。</p>
+<h2 id="bugobjective-c">报告bug类型参考（Objective-C）</h2>
 
-<h4 id="section-1">操作步骤</h4>
-<ol>
-  <li>在项目info.plist中添加一个Key：App Transport Security Settings，类型为Dictionary</li>
-  <li>在第一步添加的字典内添加一个Key: Exception Domains，类型为Dictionary</li>
-  <li>在Exception Domains内添加要支持的域，其中域作为Key，类型为Dictionary</li>
-  <li>每个域下面需要设置3个属性：类型为Boolean</li>
-</ol>
+<ul>
+  <li>Resource Leak</li>
+  <li>Memory leak</li>
+  <li>Null dereference</li>
+  <li>Parameter not null checked</li>
+  <li>Ivar not null checked</li>
+  <li>Premature nil termination argument</li>
+  <li>Retain cycle</li>
+</ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSIncludesSubdomains  YES
-NSExceptionRequiresForwardSecrecy  NO
-NSExceptionAllowsInsecureHTTPLoads  YES
+<h2 id="mac">安装运行(Mac)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>brew install infer
+gem install xcpretty
+
+#运行
+infer -- xcodebuild -target XXX -configuration Release -sdk iphoneos
+
+#非增量模式
+xcodebuild -target HelloWorldApp -configuration Debug -sdk iphonesimulator clean
+
+#查看bug
+inferTraceBugs
 </code></pre>
 </div>
-<p><img src="http://img.blog.csdn.net/20160920163718539?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" /></p>
-
-<h4 id="section-2">应用场景</h4>
-<ol>
-  <li>第三方不支持https请求的接口</li>
-  <li>不支持https协议的图片地址</li>
-  <li>不支持https协议的h5网址</li>
-</ol>
-
-<p>玩的开心……</p>
-
 
 				<hr />
 				<footer class="page-footer">
@@ -185,7 +181,7 @@ NSExceptionAllowsInsecureHTTPLoads  YES
 </div><!-- ./author-content -->
 					
 					<div class="page-meta">
-	<p> <time datetime="2016-10-04T00:00:00Z" itemprop="datePublished">October 04, 2016</time></p>
+	<p> <time datetime="2017-01-10T00:00:00Z" itemprop="datePublished">January 10, 2017</time></p>
 </div><!-- /.page-meta -->
 				</footer><!-- /.footer -->
 				<aside>
