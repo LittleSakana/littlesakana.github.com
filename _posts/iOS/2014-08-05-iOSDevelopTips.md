@@ -210,3 +210,9 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
 [self.btnGetCode setTitle:[NSString stringWithFormat:@"%ds",second] forState:UIControlStateNormal];
 [UIView setAnimationsEnabled:YES];
 ```
+
+##### `pod install` 后报 `ld: library not found for -lPods`错误
+
+从项目的frameworks中删除`libPods.a`，重新编译，解决。
+
+
