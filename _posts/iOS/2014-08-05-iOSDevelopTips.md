@@ -211,8 +211,24 @@ self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpac
 [UIView setAnimationsEnabled:YES];
 ```
 
-##### `pod install` 后报 `ld: library not found for -lPods`错误
+#### `pod install` 后报 `ld: library not found for -lPods`错误
 
 从项目的frameworks中删除`libPods.a`，重新编译，解决。
 
+#### `pod install` 后，podfile.lock文件会增加或者减少引号，是因为ruby版本不一致
 
+1. 安装rvm
+
+```
+curl -L https://get.rvm.io | bash -s stable
+rvm 常用命令
+$ rvm list known   # 列出已知的 Ruby 版本
+$ rvm install <version> # 安装指定版本的 Ruby
+$ rvm remove <version> # 删除指定版本的 Ruby
+$ rvm list # 列出已安装的 Ruby 版本
+$ rvm use <version> # 使用指定版本的 Ruby，RVM支持多个 Ruby 版本共存
+$ rvm reload # 重启 RVM
+```
+
+2. rvm install ruby版本号
+3. 重装cocoapods
