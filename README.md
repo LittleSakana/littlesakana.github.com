@@ -1,6 +1,10 @@
-## Home Page
+## 博客地址
 
 [个人博客地址](http://www.overflowstack.com/)
+
+## 内容简介
+
+主要是一些个人笔记，记录学习和工作的过程和个人总结，包括**iOS、git、算法、加密**等等，如有疑问，请邮件[LittleSakana](DSDevelopment@foxmail.com)留言。
 
 ## Skinny Bones Jekyll Starter
 
