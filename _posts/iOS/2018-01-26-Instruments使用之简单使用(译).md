@@ -156,7 +156,7 @@ Timeline面板展示的是给定跟踪记录的数据的图形摘要。在这个
 
 ![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_detail_pane_2x.png)
 
-#### 导航条
+##### 导航条
 
 在详情面板的顶部的导航条帮助你浏览收集到的数据。你可以用它来在不同类型和层级的数据之间进行切换。
 
@@ -166,3 +166,59 @@ Timeline面板展示的是给定跟踪记录的数据的图形摘要。在这个
 * **Detail type list**: 允许你在不同数据类型之间切换，这里显示的选项根据你选的instrument会有很大的不同。对于很多instrument来说，这个列表包含数据汇总，一个调用树，一个控制台。
 * **Detail tree**: 当你在详细信息面板中浏览数据时，跟踪你在层次结构中的位置。单击树的一个分支，将层次结构返回到相应的数据。
 * **Filter field**: 允许你对收集到的数据进行筛选。单击filter的按钮可以看到其他的过滤选项。你还可以通过调整inspetor面板的显示设置来更广泛地过滤收集到的数据。
+
+##### Collected data area
+
+收集数据区展示选择的instrument的所有数据，通常是以表格的形式。这个区域展示的内容也会根据选择的instrument不同而差别很大。例如Activity Monitor instrument展示进程、CPU和线程信息。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_detail_pane_collected_data_table_2x.png)
+
+通常，这个区域的单个的符号和数据点都包含一个导航按钮(![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/icon_detail_pane_gotoarrow_2x.png))，当你把光标指向数据点的时候会显示。你可以点击这个按钮来查看更深层次的数据。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_detail_pane_navigation_bar_deeper_2x.png)
+
+#### Inspector面板
+
+这个面板包含instrument对应的设置，你可以调整记录行为和在timeline面板和详情面板里的可见信息。当你在详情面板浏览数据的时候这个面板也会显示一些额外的有用信息。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_inspector_pane_navigation_bar_2x.png)
+
+##### Record settings area
+
+这个设置区域根据活动的instrument的不同而不同。通常，instrument提供一些允许你调整有关数据如何记录的某些属性的设置项，例如采样率或统计数据类型。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_inspector_pane_record_settings_2x.png)
+
+##### Display settings area
+
+这个设置区域根据instrument的不同而不同。这些设置能帮助你：
+
+* 控制在详情面板中出现的数据。例如一个instrument允许当你查看调用树的时候隐藏系统库。
+* 通过过滤和数据挖掘更有效地导航记录的数据。
+* 调整记录信息在timeline视图中的表示方式。例如，一个instrument允许你更改用于表示其收集数据的图形的样式。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_inspector_pane_display_settings_2x.png)
+
+##### Extended detail area
+
+这个区域不包含任何设置。相反，它用于展示在详情面板中特定数据的额外信息，例如完整的堆栈跟踪。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_inspector_pane_extended_detail_2x.png)
+
+### Library Palette
+
+模板库提供了完整的可用的instrument列表，允许你把他们加入跟踪文档。在这里你可以浏览instrument的描述也可以进行筛选。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_library_palette_2x.png)
+
+### Flags Palette
+
+标记板显示你在timeline面板中应用的标记。你可以选择一个标记，并快速导航到在timeline中的位置。你还可以过滤这些标记，隐藏或者展示你的标记，查看标记的时间戳信息。
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_flags_window_2x.png)
+
+### Preferences Window
+
+偏好窗口用来展示和instrument行为相关的各种配置。在这里你可以调整有关启动、保存等的一般设置。还可以调整记录设置、CPU设置、符号偏好等等。详情请看[Preferences](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Preferences.html#//apple_ref/doc/uid/TP40004652-CH26-SW1)
+
+![](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_prefs_general_2x.png)
